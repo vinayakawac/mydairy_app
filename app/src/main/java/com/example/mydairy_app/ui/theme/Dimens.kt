@@ -10,6 +10,7 @@ data class AppDimens(
     val sectionSpacing: Dp,
     val itemSpacing: Dp,
     val entryPhotoSize: Dp,
+    val photoGridCellMinSize: Dp,
 )
 
 private val DefaultAppDimens = AppDimens(
@@ -17,6 +18,7 @@ private val DefaultAppDimens = AppDimens(
     sectionSpacing = 12.dp,
     itemSpacing = 8.dp,
     entryPhotoSize = 72.dp,
+    photoGridCellMinSize = 108.dp,
 )
 
 val LocalAppDimens = staticCompositionLocalOf { DefaultAppDimens }
