@@ -6,6 +6,20 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import com.example.mydairy_app.core.database.AppDatabase;
+import com.example.mydairy_app.data.local.dao.EntryDao;
+import com.example.mydairy_app.data.local.dao.EntryTagDao;
+import com.example.mydairy_app.data.local.dao.TagDao;
+import com.example.mydairy_app.data.repository.DefaultEntryRepository;
+import com.example.mydairy_app.data.repository.DefaultTagRepository;
+import com.example.mydairy_app.di.DatabaseModule_ProvideAppDatabaseFactory;
+import com.example.mydairy_app.di.DatabaseModule_ProvideEntryDaoFactory;
+import com.example.mydairy_app.di.DatabaseModule_ProvideEntryTagDaoFactory;
+import com.example.mydairy_app.di.DatabaseModule_ProvideTagDaoFactory;
+import com.example.mydairy_app.feature.editor.EditorViewModel;
+import com.example.mydairy_app.feature.editor.EditorViewModel_HiltModules;
+import com.example.mydairy_app.feature.home.HomeViewModel;
+import com.example.mydairy_app.feature.home.HomeViewModel_HiltModules;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
@@ -20,14 +34,19 @@ import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_Internal
 import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory;
 import dagger.hilt.android.internal.managers.SavedStateHandleHolder;
 import dagger.hilt.android.internal.modules.ApplicationContextModule;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
+import dagger.internal.IdentifierNameString;
+import dagger.internal.KeepFieldType;
+import dagger.internal.LazyClassKeyMap;
+import dagger.internal.MapBuilder;
 import dagger.internal.Preconditions;
+import dagger.internal.Provider;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
-import javax.inject.Provider;
 
 @DaggerGenerated
 @Generated(
@@ -40,8 +59,7 @@ import javax.inject.Provider;
     "KotlinInternal",
     "KotlinInternalInJava",
     "cast",
-    "deprecation",
-    "nullness:initialization.field.uninitialized"
+    "deprecation"
 })
 public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
   private DaggerMyDiaryApp_HiltComponents_SingletonC() {
@@ -51,25 +69,20 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
     return new Builder();
   }
 
-  public static MyDiaryApp_HiltComponents.SingletonC create() {
-    return new Builder().build();
-  }
-
   public static final class Builder {
+    private ApplicationContextModule applicationContextModule;
+
     private Builder() {
     }
 
-    /**
-     * @deprecated This module is declared, but an instance is not used in the component. This method is a no-op. For more, see https://dagger.dev/unused-modules.
-     */
-    @Deprecated
     public Builder applicationContextModule(ApplicationContextModule applicationContextModule) {
-      Preconditions.checkNotNull(applicationContextModule);
+      this.applicationContextModule = Preconditions.checkNotNull(applicationContextModule);
       return this;
     }
 
     public MyDiaryApp_HiltComponents.SingletonC build() {
-      return new SingletonCImpl();
+      Preconditions.checkBuilderRequirement(applicationContextModule, ApplicationContextModule.class);
+      return new SingletonCImpl(applicationContextModule);
     }
   }
 
@@ -281,7 +294,7 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final ViewWithFragmentCImpl viewWithFragmentCImpl = this;
 
-    ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
+    private ViewWithFragmentCImpl(SingletonCImpl singletonCImpl,
         ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
         FragmentCImpl fragmentCImpl, View viewParam) {
       this.singletonCImpl = singletonCImpl;
@@ -302,8 +315,9 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final FragmentCImpl fragmentCImpl = this;
 
-    FragmentCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
-        ActivityCImpl activityCImpl, Fragment fragmentParam) {
+    private FragmentCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, ActivityCImpl activityCImpl,
+        Fragment fragmentParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
       this.activityCImpl = activityCImpl;
@@ -331,7 +345,7 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final ViewCImpl viewCImpl = this;
 
-    ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+    private ViewCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
         ActivityCImpl activityCImpl, View viewParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
@@ -348,8 +362,8 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final ActivityCImpl activityCImpl = this;
 
-    ActivityCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
-        Activity activityParam) {
+    private ActivityCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, Activity activityParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
 
@@ -362,12 +376,12 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @Override
     public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
-      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(Collections.<Class<?>, Boolean>emptyMap(), new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl));
+      return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(getViewModelKeys(), new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl));
     }
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return Collections.<Class<?>, Boolean>emptyMap();
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(2).put(LazyClassKeyProvider.com_example_mydairy_app_feature_editor_EditorViewModel, EditorViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_home_HomeViewModel, HomeViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -384,31 +398,104 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
     public ViewComponentBuilder viewComponentBuilder() {
       return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
     }
+
+    @IdentifierNameString
+    private static final class LazyClassKeyProvider {
+      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
+
+      static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
+
+      @KeepFieldType
+      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
+
+      @KeepFieldType
+      EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
+    }
   }
 
   private static final class ViewModelCImpl extends MyDiaryApp_HiltComponents.ViewModelC {
+    private final SavedStateHandle savedStateHandle;
+
     private final SingletonCImpl singletonCImpl;
 
     private final ActivityRetainedCImpl activityRetainedCImpl;
 
     private final ViewModelCImpl viewModelCImpl = this;
 
-    ViewModelCImpl(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
-        SavedStateHandle savedStateHandleParam, ViewModelLifecycle viewModelLifecycleParam) {
+    private Provider<EditorViewModel> editorViewModelProvider;
+
+    private Provider<HomeViewModel> homeViewModelProvider;
+
+    private ViewModelCImpl(SingletonCImpl singletonCImpl,
+        ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
+        ViewModelLifecycle viewModelLifecycleParam) {
       this.singletonCImpl = singletonCImpl;
       this.activityRetainedCImpl = activityRetainedCImpl;
-
+      this.savedStateHandle = savedStateHandleParam;
+      initialize(savedStateHandleParam, viewModelLifecycleParam);
 
     }
 
+    @SuppressWarnings("unchecked")
+    private void initialize(final SavedStateHandle savedStateHandleParam,
+        final ViewModelLifecycle viewModelLifecycleParam) {
+      this.editorViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.homeViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+    }
+
     @Override
-    public Map<Class<?>, Provider<ViewModel>> getHiltViewModelMap() {
-      return Collections.<Class<?>, Provider<ViewModel>>emptyMap();
+    public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(2).put(LazyClassKeyProvider.com_example_mydairy_app_feature_editor_EditorViewModel, ((Provider) editorViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_home_HomeViewModel, ((Provider) homeViewModelProvider)).build());
     }
 
     @Override
     public Map<Class<?>, Object> getHiltViewModelAssistedMap() {
       return Collections.<Class<?>, Object>emptyMap();
+    }
+
+    @IdentifierNameString
+    private static final class LazyClassKeyProvider {
+      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
+
+      static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
+
+      @KeepFieldType
+      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
+
+      @KeepFieldType
+      EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final ActivityRetainedCImpl activityRetainedCImpl;
+
+      private final ViewModelCImpl viewModelCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, ActivityRetainedCImpl activityRetainedCImpl,
+          ViewModelCImpl viewModelCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.activityRetainedCImpl = activityRetainedCImpl;
+        this.viewModelCImpl = viewModelCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.example.mydairy_app.feature.editor.EditorViewModel 
+          return (T) new EditorViewModel(viewModelCImpl.savedStateHandle, singletonCImpl.defaultEntryRepositoryProvider.get(), singletonCImpl.defaultTagRepositoryProvider.get());
+
+          case 1: // com.example.mydairy_app.feature.home.HomeViewModel 
+          return (T) new HomeViewModel(singletonCImpl.defaultEntryRepositoryProvider.get());
+
+          default: throw new AssertionError(id);
+        }
+      }
     }
   }
 
@@ -417,9 +504,9 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final ActivityRetainedCImpl activityRetainedCImpl = this;
 
-    dagger.internal.Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
+    private Provider<ActivityRetainedLifecycle> provideActivityRetainedLifecycleProvider;
 
-    ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
+    private ActivityRetainedCImpl(SingletonCImpl singletonCImpl,
         SavedStateHandleHolder savedStateHandleHolderParam) {
       this.singletonCImpl = singletonCImpl;
 
@@ -442,7 +529,7 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
       return provideActivityRetainedLifecycleProvider.get();
     }
 
-    private static final class SwitchingProvider<T> implements dagger.internal.Provider<T> {
+    private static final class SwitchingProvider<T> implements Provider<T> {
       private final SingletonCImpl singletonCImpl;
 
       private final ActivityRetainedCImpl activityRetainedCImpl;
@@ -456,11 +543,11 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
         this.id = id;
       }
 
-      @Override
       @SuppressWarnings("unchecked")
+      @Override
       public T get() {
         switch (id) {
-          case 0: // dagger.hilt.android.ActivityRetainedLifecycle
+          case 0: // dagger.hilt.android.ActivityRetainedLifecycle 
           return (T) ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory.provideActivityRetainedLifecycle();
 
           default: throw new AssertionError(id);
@@ -474,7 +561,7 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final ServiceCImpl serviceCImpl = this;
 
-    ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
+    private ServiceCImpl(SingletonCImpl singletonCImpl, Service serviceParam) {
       this.singletonCImpl = singletonCImpl;
 
 
@@ -482,11 +569,39 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
   }
 
   private static final class SingletonCImpl extends MyDiaryApp_HiltComponents.SingletonC {
+    private final ApplicationContextModule applicationContextModule;
+
     private final SingletonCImpl singletonCImpl = this;
 
-    SingletonCImpl() {
+    private Provider<AppDatabase> provideAppDatabaseProvider;
 
+    private Provider<DefaultEntryRepository> defaultEntryRepositoryProvider;
 
+    private Provider<DefaultTagRepository> defaultTagRepositoryProvider;
+
+    private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
+      this.applicationContextModule = applicationContextModuleParam;
+      initialize(applicationContextModuleParam);
+
+    }
+
+    private EntryDao entryDao() {
+      return DatabaseModule_ProvideEntryDaoFactory.provideEntryDao(provideAppDatabaseProvider.get());
+    }
+
+    private EntryTagDao entryTagDao() {
+      return DatabaseModule_ProvideEntryTagDaoFactory.provideEntryTagDao(provideAppDatabaseProvider.get());
+    }
+
+    private TagDao tagDao() {
+      return DatabaseModule_ProvideTagDaoFactory.provideTagDao(provideAppDatabaseProvider.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final ApplicationContextModule applicationContextModuleParam) {
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 1));
+      this.defaultEntryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<DefaultEntryRepository>(singletonCImpl, 0));
+      this.defaultTagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<DefaultTagRepository>(singletonCImpl, 2));
     }
 
     @Override
@@ -506,6 +621,34 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
     @Override
     public ServiceComponentBuilder serviceComponentBuilder() {
       return new ServiceCBuilder(singletonCImpl);
+    }
+
+    private static final class SwitchingProvider<T> implements Provider<T> {
+      private final SingletonCImpl singletonCImpl;
+
+      private final int id;
+
+      SwitchingProvider(SingletonCImpl singletonCImpl, int id) {
+        this.singletonCImpl = singletonCImpl;
+        this.id = id;
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public T get() {
+        switch (id) {
+          case 0: // com.example.mydairy_app.data.repository.DefaultEntryRepository 
+          return (T) new DefaultEntryRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideAppDatabaseProvider.get(), singletonCImpl.entryDao(), singletonCImpl.entryTagDao());
+
+          case 1: // com.example.mydairy_app.core.database.AppDatabase 
+          return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 2: // com.example.mydairy_app.data.repository.DefaultTagRepository 
+          return (T) new DefaultTagRepository(singletonCImpl.tagDao());
+
+          default: throw new AssertionError(id);
+        }
+      }
     }
   }
 }

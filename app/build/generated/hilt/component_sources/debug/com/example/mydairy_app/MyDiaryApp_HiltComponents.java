@@ -2,6 +2,8 @@ package com.example.mydairy_app;
 
 import com.example.mydairy_app.di.DatabaseModule;
 import com.example.mydairy_app.di.RepositoryModule;
+import com.example.mydairy_app.feature.editor.EditorViewModel_HiltModules;
+import com.example.mydairy_app.feature.home.HomeViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -32,7 +34,7 @@ import dagger.hilt.android.internal.managers.FragmentComponentManager;
 import dagger.hilt.android.internal.managers.HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedComponentBuilderEntryPoint;
 import dagger.hilt.android.internal.managers.HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedLifecycleEntryPoint;
 import dagger.hilt.android.internal.managers.HiltWrapper_ActivityRetainedComponentManager_LifecycleModule;
-import dagger.hilt.android.internal.managers.HiltWrapper_ActivitySavedStateHandleModule;
+import dagger.hilt.android.internal.managers.HiltWrapper_SavedStateHandleModule;
 import dagger.hilt.android.internal.managers.ServiceComponentManager;
 import dagger.hilt.android.internal.managers.ViewComponentManager;
 import dagger.hilt.android.internal.modules.ApplicationContextModule;
@@ -135,7 +137,6 @@ public final class MyDiaryApp_HiltComponents {
       }
   )
   @Singleton
-  @jakarta.inject.Singleton
   public abstract static class SingletonC implements MyDiaryApp_GeneratedInjector,
       FragmentGetContextFix.FragmentGetContextFixEntryPoint,
       HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedComponentBuilderEntryPoint,
@@ -155,8 +156,10 @@ public final class MyDiaryApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          EditorViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
-          HiltWrapper_ActivitySavedStateHandleModule.class,
+          HiltWrapper_SavedStateHandleModule.class,
+          HomeViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class
       }
@@ -193,7 +196,11 @@ public final class MyDiaryApp_HiltComponents {
   }
 
   @Subcomponent(
-      modules = HiltWrapper_HiltViewModelFactory_ViewModelModule.class
+      modules = {
+          EditorViewModel_HiltModules.BindsModule.class,
+          HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
+          HomeViewModel_HiltModules.BindsModule.class
+      }
   )
   @ViewModelScoped
   public abstract static class ViewModelC implements ViewModelComponent,

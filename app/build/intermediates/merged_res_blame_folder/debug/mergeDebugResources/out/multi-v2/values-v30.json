@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.mydairy_app-mergeDebugResources-47:/values-v30/values-v30.xml",
+            "outputFile": "com.example.mydairy_app-mergeDebugResources-65:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\vinay\\.gradle\\caches\\9.3.1\\transforms\\c929753f1913ce2727de56fed28b8547\\workspace\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
+                    "source": "C:\\Users\\vinay\\.gradle\\caches\\8.13\\transforms\\59cf93b772e5eef501682d3bec6812f5\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

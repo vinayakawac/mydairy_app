@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -16,12 +17,13 @@ import androidx.compose.ui.res.stringResource
 import com.example.mydairy_app.R
 import com.example.mydairy_app.ui.theme.MyDiaryDimens
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StubScreen(
     @StringRes titleRes: Int,
     onBack: (() -> Unit)?,
     content: @Composable ColumnScope.() -> Unit,
-): Unit {
+) {
     val dimens = MyDiaryDimens.current
 
     Scaffold(
