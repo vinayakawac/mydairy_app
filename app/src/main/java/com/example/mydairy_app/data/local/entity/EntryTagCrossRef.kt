@@ -1,0 +1,27 @@
+package com.example.mydairy_app.data.local.entity
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+
+@Entity(
+    tableName = "entry_tag_cross_ref",
+    primaryKeys = ["entryId", "tagId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = EntryEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["entryId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = TagEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["tagId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+)
+data class EntryTagCrossRef(
+    val entryId: Long,
+    val tagId: Long,
+)

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyDiary</string>
+    <string name="home_title">Home</string>
+    <string name="detail_title">Detail</string>
+    <string name="editor_title">Editor</string>
+    <string name="calendar_title">Calendar</string>
+    <string name="tags_title">Tags</string>
+    <string name="settings_title">Settings</string>
+    <string name="open_editor_new">New Entry</string>
+    <string name="open_detail_sample">Open Detail Stub</string>
+    <string name="open_calendar">Open Calendar</string>
+    <string name="open_tags">Open Tags</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="go_back">Back</string>
+    <string name="edit_entry">Edit Entry</string>
+    <string name="entry_id_value">Entry ID: %1$d</string>
+    <string name="new_entry_mode">Creating a new entry</string>
+    <string name="edit_entry_mode_value">Editing entry: %1$d</string>
+    <string name="stub_message">Stub screen for phase scaffolding</string>
+</resources>
