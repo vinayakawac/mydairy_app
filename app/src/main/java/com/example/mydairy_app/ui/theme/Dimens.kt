@@ -9,12 +9,14 @@ data class AppDimens(
     val screenPadding: Dp,
     val sectionSpacing: Dp,
     val itemSpacing: Dp,
+    val entryPhotoSize: Dp,
 )
 
 private val DefaultAppDimens = AppDimens(
     screenPadding = 16.dp,
     sectionSpacing = 12.dp,
     itemSpacing = 8.dp,
+    entryPhotoSize = 72.dp,
 )
 
 val LocalAppDimens = staticCompositionLocalOf { DefaultAppDimens }

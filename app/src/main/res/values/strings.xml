@@ -18,4 +18,12 @@
     <string name="new_entry_mode">Creating a new entry</string>
     <string name="edit_entry_mode_value">Editing entry: %1$d</string>
     <string name="stub_message">Stub screen for phase scaffolding</string>
+    <string name="home_new_entry_fab">New</string>
+    <string name="home_empty_title">No entries yet</string>
+    <string name="home_empty_description">Create your first diary entry to see it here.</string>
+    <string name="home_error_title">Could not load entries</string>
+    <string name="home_error_description">Try again to load your diary.</string>
+    <string name="home_retry">Retry</string>
+    <string name="entry_untitled_title">Untitled Entry</string>
+    <string name="entry_photo_content_description">Entry photo preview</string>
 </resources>
