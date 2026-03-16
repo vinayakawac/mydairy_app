@@ -55,4 +55,19 @@
     <string name="editor_message_save_failed">Could not save entry.</string>
     <string name="editor_tags_done">Done</string>
     <string name="editor_remove_photo">Remove</string>
+    <string name="detail_created_at">Created: %1$s</string>
+    <string name="detail_photos_section">Photos</string>
+    <string name="detail_no_photos">No photos attached.</string>
+    <string name="detail_tags_section">Tags</string>
+    <string name="detail_no_tags">No tags assigned.</string>
+    <string name="detail_delete_button">Delete Entry</string>
+    <string name="detail_delete_title">Delete this entry?</string>
+    <string name="detail_delete_message">This action cannot be undone.</string>
+    <string name="detail_delete_confirm">Delete</string>
+    <string name="detail_delete_cancel">Cancel</string>
+    <string name="detail_delete_failed">Could not delete entry.</string>
+    <string name="detail_error_title">Could not load entry.</string>
+    <string name="detail_retry">Retry</string>
+    <string name="detail_photo_preview_title">Photo Preview</string>
+    <string name="detail_photo_preview_close">Close</string>
 </resources>

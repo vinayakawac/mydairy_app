@@ -119,6 +119,10 @@ class DefaultEntryRepository @Inject constructor(
     }
 
     override suspend fun deleteEntryById(entryId: Long): Unit {
+        FileUtil.deleteEntryDirectory(
+            context = context,
+            entryId = entryId,
+        )
         appDatabase.withTransaction {
             entryTagDao.deleteCrossRefsForEntry(entryId)
             entryDao.deleteEntryById(entryId)

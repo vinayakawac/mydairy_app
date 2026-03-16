@@ -2,6 +2,7 @@ package com.example.mydairy_app;
 
 import com.example.mydairy_app.di.DatabaseModule;
 import com.example.mydairy_app.di.RepositoryModule;
+import com.example.mydairy_app.feature.detail.DetailViewModel_HiltModules;
 import com.example.mydairy_app.feature.editor.EditorViewModel_HiltModules;
 import com.example.mydairy_app.feature.home.HomeViewModel_HiltModules;
 import dagger.Binds;
@@ -156,6 +157,7 @@ public final class MyDiaryApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          DetailViewModel_HiltModules.KeyModule.class,
           EditorViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
@@ -197,6 +199,7 @@ public final class MyDiaryApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          DetailViewModel_HiltModules.BindsModule.class,
           EditorViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class

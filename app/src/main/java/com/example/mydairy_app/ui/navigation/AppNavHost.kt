@@ -48,12 +48,8 @@ fun AppNavHost(): Unit {
                     type = NavType.LongType
                 },
             ),
-        ) { backStackEntry ->
-            val entryId = backStackEntry.arguments?.getLong(Screen.Detail.ENTRY_ID_ARG)
-                ?: Screen.SAMPLE_ENTRY_ID
-
+        ) {
             DetailScreen(
-                entryId = entryId,
                 onBack = { navController.popBackStack() },
                 onEdit = { editableId ->
                     navController.navigate(Screen.Editor.createRoute(editableId))

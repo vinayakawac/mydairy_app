@@ -26,7 +26,8 @@ data class PhotoGridItemUiModel(
 @Composable
 fun PhotoGrid(
     photos: List<PhotoGridItemUiModel>,
-    onRemovePhoto: (String) -> Unit,
+    onPhotoClick: (String) -> Unit,
+    onRemovePhoto: ((String) -> Unit)?,
     modifier: Modifier = Modifier,
 ): Unit {
     val dimens = MyDiaryDimens.current
@@ -41,7 +42,10 @@ fun PhotoGrid(
             items = photos,
             key = PhotoGridItemUiModel::key,
         ) { photo ->
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                onClick = { onPhotoClick(photo.source) },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(dimens.itemSpacing),
                 ) {
@@ -53,11 +57,13 @@ fun PhotoGrid(
                             .fillMaxWidth()
                             .height(dimens.photoGridCellMinSize),
                     )
-                    Button(
-                        onClick = { onRemovePhoto(photo.key) },
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(text = stringResource(id = R.string.editor_remove_photo))
+                    if (onRemovePhoto != null) {
+                        Button(
+                            onClick = { onRemovePhoto(photo.key) },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(text = stringResource(id = R.string.editor_remove_photo))
+                        }
                     }
                 }
             }

@@ -2,6 +2,21 @@ R_DEF: Internal format may change without notice
 local
 string app_name
 string calendar_title
+string detail_created_at
+string detail_delete_button
+string detail_delete_cancel
+string detail_delete_confirm
+string detail_delete_failed
+string detail_delete_message
+string detail_delete_title
+string detail_error_title
+string detail_no_photos
+string detail_no_tags
+string detail_photo_preview_close
+string detail_photo_preview_title
+string detail_photos_section
+string detail_retry
+string detail_tags_section
 string detail_title
 string edit_entry
 string edit_entry_mode_value

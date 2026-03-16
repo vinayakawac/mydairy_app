@@ -415,6 +415,7 @@ private fun EditorContent(
                             source = photo.source,
                         )
                     },
+                    onPhotoClick = {},
                     onRemovePhoto = onRemovePhoto,
                     modifier = Modifier
                         .fillMaxWidth()
