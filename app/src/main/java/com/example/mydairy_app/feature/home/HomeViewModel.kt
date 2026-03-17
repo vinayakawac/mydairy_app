@@ -169,7 +169,7 @@ class HomeViewModel @Inject constructor(
                     .debounce(SEARCH_DEBOUNCE_MILLIS)
                     .map(String::trim)
                     .distinctUntilChanged(),
-                selectedTagId.distinctUntilChanged(),
+                selectedTagId,
             ) { query, activeTagId ->
                 query to activeTagId
             }

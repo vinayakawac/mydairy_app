@@ -403,17 +403,17 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
-
       static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
+
+      static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
 
       static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
 
       @KeepFieldType
-      DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
+      EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
 
       @KeepFieldType
-      EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
+      DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
 
       @KeepFieldType
       HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
@@ -465,17 +465,17 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
-
       static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
+
+      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
 
       static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
 
       @KeepFieldType
-      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
+      DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
 
       @KeepFieldType
-      DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
+      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
 
       @KeepFieldType
       EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;

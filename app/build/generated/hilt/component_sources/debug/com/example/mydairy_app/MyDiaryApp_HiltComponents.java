@@ -5,6 +5,7 @@ import com.example.mydairy_app.di.RepositoryModule;
 import com.example.mydairy_app.feature.detail.DetailViewModel_HiltModules;
 import com.example.mydairy_app.feature.editor.EditorViewModel_HiltModules;
 import com.example.mydairy_app.feature.home.HomeViewModel_HiltModules;
+import com.example.mydairy_app.feature.tags.TagManagerViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -163,7 +164,8 @@ public final class MyDiaryApp_HiltComponents {
           HiltWrapper_SavedStateHandleModule.class,
           HomeViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
-          ViewModelCBuilderModule.class
+          ViewModelCBuilderModule.class,
+          TagManagerViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -202,7 +204,8 @@ public final class MyDiaryApp_HiltComponents {
           DetailViewModel_HiltModules.BindsModule.class,
           EditorViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
-          HomeViewModel_HiltModules.BindsModule.class
+          HomeViewModel_HiltModules.BindsModule.class,
+          TagManagerViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped
