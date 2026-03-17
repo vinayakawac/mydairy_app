@@ -81,6 +81,13 @@ string open_detail_sample
 string open_editor_new
 string open_settings
 string open_tags
+string settings_error_title
+string settings_message_update_failed
+string settings_retry
+string settings_theme_dark
+string settings_theme_light
+string settings_theme_section_title
+string settings_theme_system
 string settings_title
 string stub_message
 string tags_add_action

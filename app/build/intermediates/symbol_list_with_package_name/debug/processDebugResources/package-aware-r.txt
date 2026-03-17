@@ -358,6 +358,13 @@ string open_tags
 string range_end
 string range_start
 string selected
+string settings_error_title
+string settings_message_update_failed
+string settings_retry
+string settings_theme_dark
+string settings_theme_light
+string settings_theme_section_title
+string settings_theme_system
 string settings_title
 string state_empty
 string state_off

@@ -81,6 +81,13 @@
     <string name="open_editor_new">New Entry</string>
     <string name="open_settings">Open Settings</string>
     <string name="open_tags">Open Tags</string>
+    <string name="settings_error_title">Could not load settings.</string>
+    <string name="settings_message_update_failed">Could not update theme setting.</string>
+    <string name="settings_retry">Retry</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_section_title">Theme</string>
+    <string name="settings_theme_system">System</string>
     <string name="settings_title">Settings</string>
     <string name="stub_message">Stub screen for phase scaffolding</string>
     <string name="tags_add_action">Add</string>

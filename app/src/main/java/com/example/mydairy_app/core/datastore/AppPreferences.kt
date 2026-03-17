@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
+private const val DATASTORE_NAME: String = "app_preferences"
 private val Context.appPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE_NAME)
 
 @Singleton
@@ -45,7 +46,6 @@ class AppPreferences @Inject constructor(
     }
 
     private companion object {
-        const val DATASTORE_NAME: String = "app_preferences"
         val DARK_MODE_OVERRIDE_KEY: Preferences.Key<Boolean> = booleanPreferencesKey("dark_mode_override")
     }
 }

@@ -265,6 +265,13 @@
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
     <string name="selected">Selected</string>
+    <string name="settings_error_title">Could not load settings.</string>
+    <string name="settings_message_update_failed">Could not update theme setting.</string>
+    <string name="settings_retry">Retry</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_section_title">Theme</string>
+    <string name="settings_theme_system">System</string>
     <string name="settings_title">Settings</string>
     <string name="state_empty">Empty</string>
     <string name="state_off">Off</string>

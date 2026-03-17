@@ -6,6 +6,7 @@ import com.example.mydairy_app.feature.calendar.CalendarViewModel_HiltModules;
 import com.example.mydairy_app.feature.detail.DetailViewModel_HiltModules;
 import com.example.mydairy_app.feature.editor.EditorViewModel_HiltModules;
 import com.example.mydairy_app.feature.home.HomeViewModel_HiltModules;
+import com.example.mydairy_app.feature.settings.SettingsViewModel_HiltModules;
 import com.example.mydairy_app.feature.tags.TagManagerViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
@@ -167,6 +168,7 @@ public final class MyDiaryApp_HiltComponents {
           HomeViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
+          SettingsViewModel_HiltModules.KeyModule.class,
           TagManagerViewModel_HiltModules.KeyModule.class
       }
   )
@@ -208,6 +210,7 @@ public final class MyDiaryApp_HiltComponents {
           EditorViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class,
+          SettingsViewModel_HiltModules.BindsModule.class,
           TagManagerViewModel_HiltModules.BindsModule.class
       }
   )
