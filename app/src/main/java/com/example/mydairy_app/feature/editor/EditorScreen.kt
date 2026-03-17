@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -189,7 +190,7 @@ fun EditorScreen(
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             try {
                                 photoPickerLauncher.launch(
-                                    ActivityResultContracts.PickVisualMedia.Request(
+                                    PickVisualMediaRequest(
                                         ActivityResultContracts.PickVisualMedia.ImageOnly,
                                     ),
                                 )

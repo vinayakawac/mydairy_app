@@ -39,6 +39,8 @@
     <string name="editor_loading">Loading editor</string>
     <string name="editor_message_body_required">Entry body cannot be empty.</string>
     <string name="editor_message_camera_failed">Could not open camera capture.</string>
+    <string name="editor_message_camera_unavailable">No camera app available on this device.</string>
+    <string name="editor_message_gallery_failed">Could not open photo picker.</string>
     <string name="editor_message_save_failed">Could not save entry.</string>
     <string name="editor_no_photos">No photos added</string>
     <string name="editor_no_tags">No tags selected</string>

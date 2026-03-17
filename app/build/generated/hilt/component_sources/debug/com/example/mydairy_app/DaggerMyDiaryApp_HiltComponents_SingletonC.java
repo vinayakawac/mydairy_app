@@ -416,32 +416,32 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_mydairy_app_feature_tags_TagManagerViewModel = "com.example.mydairy_app.feature.tags.TagManagerViewModel";
-
-      static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
-
       static String com_example_mydairy_app_feature_settings_SettingsViewModel = "com.example.mydairy_app.feature.settings.SettingsViewModel";
+
+      static String com_example_mydairy_app_feature_tags_TagManagerViewModel = "com.example.mydairy_app.feature.tags.TagManagerViewModel";
 
       static String com_example_mydairy_app_feature_calendar_CalendarViewModel = "com.example.mydairy_app.feature.calendar.CalendarViewModel";
 
       static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
 
+      static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
+
       static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
 
       @KeepFieldType
-      TagManagerViewModel com_example_mydairy_app_feature_tags_TagManagerViewModel2;
-
-      @KeepFieldType
-      EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
-
-      @KeepFieldType
       SettingsViewModel com_example_mydairy_app_feature_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      TagManagerViewModel com_example_mydairy_app_feature_tags_TagManagerViewModel2;
 
       @KeepFieldType
       CalendarViewModel com_example_mydairy_app_feature_calendar_CalendarViewModel2;
 
       @KeepFieldType
       DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
+
+      @KeepFieldType
+      EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
 
       @KeepFieldType
       HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
@@ -502,17 +502,20 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
+
       static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
 
       static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
-
-      static String com_example_mydairy_app_feature_calendar_CalendarViewModel = "com.example.mydairy_app.feature.calendar.CalendarViewModel";
 
       static String com_example_mydairy_app_feature_tags_TagManagerViewModel = "com.example.mydairy_app.feature.tags.TagManagerViewModel";
 
       static String com_example_mydairy_app_feature_settings_SettingsViewModel = "com.example.mydairy_app.feature.settings.SettingsViewModel";
 
-      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
+      static String com_example_mydairy_app_feature_calendar_CalendarViewModel = "com.example.mydairy_app.feature.calendar.CalendarViewModel";
+
+      @KeepFieldType
+      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
 
       @KeepFieldType
       EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
@@ -521,16 +524,13 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
       DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
 
       @KeepFieldType
-      CalendarViewModel com_example_mydairy_app_feature_calendar_CalendarViewModel2;
-
-      @KeepFieldType
       TagManagerViewModel com_example_mydairy_app_feature_tags_TagManagerViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_example_mydairy_app_feature_settings_SettingsViewModel2;
 
       @KeepFieldType
-      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
+      CalendarViewModel com_example_mydairy_app_feature_calendar_CalendarViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

@@ -252,6 +252,8 @@ string editor_field_title_label
 string editor_loading
 string editor_message_body_required
 string editor_message_camera_failed
+string editor_message_camera_unavailable
+string editor_message_gallery_failed
 string editor_message_save_failed
 string editor_no_photos
 string editor_no_tags

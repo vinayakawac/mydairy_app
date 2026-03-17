@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.example.mydairy_app.core.database.AppDatabase;
+import com.example.mydairy_app.core.datastore.AppPreferences;
 import com.example.mydairy_app.data.local.dao.EntryDao;
 import com.example.mydairy_app.data.local.dao.EntryTagDao;
 import com.example.mydairy_app.data.local.dao.TagDao;
@@ -24,6 +25,8 @@ import com.example.mydairy_app.feature.editor.EditorViewModel;
 import com.example.mydairy_app.feature.editor.EditorViewModel_HiltModules;
 import com.example.mydairy_app.feature.home.HomeViewModel;
 import com.example.mydairy_app.feature.home.HomeViewModel_HiltModules;
+import com.example.mydairy_app.feature.settings.SettingsViewModel;
+import com.example.mydairy_app.feature.settings.SettingsViewModel_HiltModules;
 import com.example.mydairy_app.feature.tags.TagManagerViewModel;
 import com.example.mydairy_app.feature.tags.TagManagerViewModel_HiltModules;
 import dagger.hilt.android.ActivityRetainedLifecycle;
@@ -378,6 +381,7 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @Override
     public void injectMainActivity(MainActivity mainActivity) {
+      injectMainActivity2(mainActivity);
     }
 
     @Override
@@ -387,7 +391,7 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(5).put(LazyClassKeyProvider.com_example_mydairy_app_feature_calendar_CalendarViewModel, CalendarViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_detail_DetailViewModel, DetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_editor_EditorViewModel, EditorViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_home_HomeViewModel, HomeViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_tags_TagManagerViewModel, TagManagerViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(6).put(LazyClassKeyProvider.com_example_mydairy_app_feature_calendar_CalendarViewModel, CalendarViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_detail_DetailViewModel, DetailViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_editor_EditorViewModel, EditorViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_home_HomeViewModel, HomeViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_settings_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_example_mydairy_app_feature_tags_TagManagerViewModel, TagManagerViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -405,20 +409,24 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
       return new ViewCBuilder(singletonCImpl, activityRetainedCImpl, activityCImpl);
     }
 
+    private MainActivity injectMainActivity2(MainActivity instance) {
+      MainActivity_MembersInjector.injectAppPreferences(instance, singletonCImpl.appPreferencesProvider.get());
+      return instance;
+    }
+
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
-
       static String com_example_mydairy_app_feature_tags_TagManagerViewModel = "com.example.mydairy_app.feature.tags.TagManagerViewModel";
 
       static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
+
+      static String com_example_mydairy_app_feature_settings_SettingsViewModel = "com.example.mydairy_app.feature.settings.SettingsViewModel";
 
       static String com_example_mydairy_app_feature_calendar_CalendarViewModel = "com.example.mydairy_app.feature.calendar.CalendarViewModel";
 
       static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
 
-      @KeepFieldType
-      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
+      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
 
       @KeepFieldType
       TagManagerViewModel com_example_mydairy_app_feature_tags_TagManagerViewModel2;
@@ -427,10 +435,16 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
       EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
 
       @KeepFieldType
+      SettingsViewModel com_example_mydairy_app_feature_settings_SettingsViewModel2;
+
+      @KeepFieldType
       CalendarViewModel com_example_mydairy_app_feature_calendar_CalendarViewModel2;
 
       @KeepFieldType
       DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
+
+      @KeepFieldType
+      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
     }
   }
 
@@ -451,6 +465,8 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private Provider<HomeViewModel> homeViewModelProvider;
 
+    private Provider<SettingsViewModel> settingsViewModelProvider;
+
     private Provider<TagManagerViewModel> tagManagerViewModelProvider;
 
     private ViewModelCImpl(SingletonCImpl singletonCImpl,
@@ -470,12 +486,13 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
       this.detailViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
       this.editorViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
       this.homeViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
-      this.tagManagerViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.tagManagerViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(5).put(LazyClassKeyProvider.com_example_mydairy_app_feature_calendar_CalendarViewModel, ((Provider) calendarViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_detail_DetailViewModel, ((Provider) detailViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_editor_EditorViewModel, ((Provider) editorViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_home_HomeViewModel, ((Provider) homeViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_tags_TagManagerViewModel, ((Provider) tagManagerViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(6).put(LazyClassKeyProvider.com_example_mydairy_app_feature_calendar_CalendarViewModel, ((Provider) calendarViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_detail_DetailViewModel, ((Provider) detailViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_editor_EditorViewModel, ((Provider) editorViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_home_HomeViewModel, ((Provider) homeViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_settings_SettingsViewModel, ((Provider) settingsViewModelProvider)).put(LazyClassKeyProvider.com_example_mydairy_app_feature_tags_TagManagerViewModel, ((Provider) tagManagerViewModelProvider)).build());
     }
 
     @Override
@@ -485,30 +502,35 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_mydairy_app_feature_calendar_CalendarViewModel = "com.example.mydairy_app.feature.calendar.CalendarViewModel";
+      static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
 
       static String com_example_mydairy_app_feature_detail_DetailViewModel = "com.example.mydairy_app.feature.detail.DetailViewModel";
 
-      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
-
-      static String com_example_mydairy_app_feature_editor_EditorViewModel = "com.example.mydairy_app.feature.editor.EditorViewModel";
+      static String com_example_mydairy_app_feature_calendar_CalendarViewModel = "com.example.mydairy_app.feature.calendar.CalendarViewModel";
 
       static String com_example_mydairy_app_feature_tags_TagManagerViewModel = "com.example.mydairy_app.feature.tags.TagManagerViewModel";
 
-      @KeepFieldType
-      CalendarViewModel com_example_mydairy_app_feature_calendar_CalendarViewModel2;
+      static String com_example_mydairy_app_feature_settings_SettingsViewModel = "com.example.mydairy_app.feature.settings.SettingsViewModel";
 
-      @KeepFieldType
-      DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
-
-      @KeepFieldType
-      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
+      static String com_example_mydairy_app_feature_home_HomeViewModel = "com.example.mydairy_app.feature.home.HomeViewModel";
 
       @KeepFieldType
       EditorViewModel com_example_mydairy_app_feature_editor_EditorViewModel2;
 
       @KeepFieldType
+      DetailViewModel com_example_mydairy_app_feature_detail_DetailViewModel2;
+
+      @KeepFieldType
+      CalendarViewModel com_example_mydairy_app_feature_calendar_CalendarViewModel2;
+
+      @KeepFieldType
       TagManagerViewModel com_example_mydairy_app_feature_tags_TagManagerViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_example_mydairy_app_feature_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      HomeViewModel com_example_mydairy_app_feature_home_HomeViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -544,7 +566,10 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
           case 3: // com.example.mydairy_app.feature.home.HomeViewModel 
           return (T) new HomeViewModel(viewModelCImpl.savedStateHandle, singletonCImpl.defaultEntryRepositoryProvider.get(), singletonCImpl.defaultTagRepositoryProvider.get());
 
-          case 4: // com.example.mydairy_app.feature.tags.TagManagerViewModel 
+          case 4: // com.example.mydairy_app.feature.settings.SettingsViewModel 
+          return (T) new SettingsViewModel(singletonCImpl.appPreferencesProvider.get());
+
+          case 5: // com.example.mydairy_app.feature.tags.TagManagerViewModel 
           return (T) new TagManagerViewModel(singletonCImpl.defaultTagRepositoryProvider.get());
 
           default: throw new AssertionError(id);
@@ -627,6 +652,8 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     private final SingletonCImpl singletonCImpl = this;
 
+    private Provider<AppPreferences> appPreferencesProvider;
+
     private Provider<AppDatabase> provideAppDatabaseProvider;
 
     private Provider<DefaultEntryRepository> defaultEntryRepositoryProvider;
@@ -653,9 +680,10 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
 
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
-      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 1));
-      this.defaultEntryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<DefaultEntryRepository>(singletonCImpl, 0));
-      this.defaultTagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<DefaultTagRepository>(singletonCImpl, 2));
+      this.appPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<AppPreferences>(singletonCImpl, 0));
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 2));
+      this.defaultEntryRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<DefaultEntryRepository>(singletonCImpl, 1));
+      this.defaultTagRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<DefaultTagRepository>(singletonCImpl, 3));
     }
 
     @Override
@@ -691,13 +719,16 @@ public final class DaggerMyDiaryApp_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.example.mydairy_app.data.repository.DefaultEntryRepository 
+          case 0: // com.example.mydairy_app.core.datastore.AppPreferences 
+          return (T) new AppPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 1: // com.example.mydairy_app.data.repository.DefaultEntryRepository 
           return (T) new DefaultEntryRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideAppDatabaseProvider.get(), singletonCImpl.entryDao(), singletonCImpl.entryTagDao());
 
-          case 1: // com.example.mydairy_app.core.database.AppDatabase 
+          case 2: // com.example.mydairy_app.core.database.AppDatabase 
           return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 2: // com.example.mydairy_app.data.repository.DefaultTagRepository 
+          case 3: // com.example.mydairy_app.data.repository.DefaultTagRepository 
           return (T) new DefaultTagRepository(singletonCImpl.tagDao());
 
           default: throw new AssertionError(id);
