@@ -2,7 +2,9 @@ package com.example.mydairy_app.feature.home;
 
 import androidx.lifecycle.ViewModel;
 import com.example.mydairy_app.data.repository.EntryRepository;
+import com.example.mydairy_app.data.repository.TagRepository;
 import com.example.mydairy_app.domain.model.Entry;
+import com.example.mydairy_app.domain.model.Tag;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import java.time.Instant;
 import java.time.ZoneId;

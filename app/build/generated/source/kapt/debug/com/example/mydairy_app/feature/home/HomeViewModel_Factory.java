@@ -1,6 +1,7 @@
 package com.example.mydairy_app.feature.home;
 
 import com.example.mydairy_app.data.repository.EntryRepository;
+import com.example.mydairy_app.data.repository.TagRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.QualifierMetadata;
@@ -26,20 +27,26 @@ import javax.inject.Provider;
 public final class HomeViewModel_Factory implements Factory<HomeViewModel> {
   private final Provider<EntryRepository> entryRepositoryProvider;
 
-  public HomeViewModel_Factory(Provider<EntryRepository> entryRepositoryProvider) {
+  private final Provider<TagRepository> tagRepositoryProvider;
+
+  public HomeViewModel_Factory(Provider<EntryRepository> entryRepositoryProvider,
+      Provider<TagRepository> tagRepositoryProvider) {
     this.entryRepositoryProvider = entryRepositoryProvider;
+    this.tagRepositoryProvider = tagRepositoryProvider;
   }
 
   @Override
   public HomeViewModel get() {
-    return newInstance(entryRepositoryProvider.get());
+    return newInstance(entryRepositoryProvider.get(), tagRepositoryProvider.get());
   }
 
-  public static HomeViewModel_Factory create(Provider<EntryRepository> entryRepositoryProvider) {
-    return new HomeViewModel_Factory(entryRepositoryProvider);
+  public static HomeViewModel_Factory create(Provider<EntryRepository> entryRepositoryProvider,
+      Provider<TagRepository> tagRepositoryProvider) {
+    return new HomeViewModel_Factory(entryRepositoryProvider, tagRepositoryProvider);
   }
 
-  public static HomeViewModel newInstance(EntryRepository entryRepository) {
-    return new HomeViewModel(entryRepository);
+  public static HomeViewModel newInstance(EntryRepository entryRepository,
+      TagRepository tagRepository) {
+    return new HomeViewModel(entryRepository, tagRepository);
   }
 }

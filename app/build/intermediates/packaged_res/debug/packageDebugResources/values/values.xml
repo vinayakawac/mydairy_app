@@ -58,6 +58,7 @@
     <string name="home_empty_title">No entries yet</string>
     <string name="home_error_description">Try again to load your diary.</string>
     <string name="home_error_title">Could not load entries</string>
+    <string name="home_filter_all">All</string>
     <string name="home_new_entry_fab">New</string>
     <string name="home_retry">Retry</string>
     <string name="home_search_clear">Clear</string>
@@ -75,6 +76,26 @@
     <string name="open_tags">Open Tags</string>
     <string name="settings_title">Settings</string>
     <string name="stub_message">Stub screen for phase scaffolding</string>
+    <string name="tags_add_action">Add</string>
+    <string name="tags_add_section_title">Create Tag</string>
+    <string name="tags_delete_action">Delete</string>
+    <string name="tags_delete_cancel">Cancel</string>
+    <string name="tags_delete_confirm">Delete</string>
+    <string name="tags_delete_message">Delete \"%1$s\"?</string>
+    <string name="tags_delete_title">Delete Tag?</string>
+    <string name="tags_empty_description">No tags yet.</string>
+    <string name="tags_error_title">Could not load tags.</string>
+    <string name="tags_list_section_title">Existing Tags</string>
+    <string name="tags_message_create_failed">Could not create tag.</string>
+    <string name="tags_message_delete_failed">Could not delete tag.</string>
+    <string name="tags_message_duplicate_name">Tag name already exists.</string>
+    <string name="tags_message_name_required">Tag name is required.</string>
+    <string name="tags_message_rename_failed">Could not rename tag.</string>
+    <string name="tags_name_label">Tag name</string>
+    <string name="tags_rename_action">Rename</string>
+    <string name="tags_rename_confirm">Save</string>
+    <string name="tags_rename_title">Rename Tag</string>
+    <string name="tags_retry">Retry</string>
     <string name="tags_title">Tags</string>
     <style name="Theme.MyDiary" parent="@android:style/Theme.DeviceDefault.DayNight"/>
 </resources>

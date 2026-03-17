@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mydairy_app.R
 import com.example.mydairy_app.ui.components.EntryCard
+import com.example.mydairy_app.ui.components.TagChip
 import com.example.mydairy_app.ui.theme.MyDiaryDimens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,6 +102,18 @@ fun HomeScreen(
                 )
             }
 
+            if (uiState.availableTags.isNotEmpty()) {
+                TagFiltersRow(
+                    tags = uiState.availableTags,
+                    selectedTagId = uiState.selectedTagId,
+                    onSelectTag = viewModel::onTagFilterSelected,
+                    onSelectAll = viewModel::onClearTagFilter,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = dimens.itemSpacing),
+                )
+            }
+
             when (val state = uiState) {
                 is HomeUiState.Loading -> {
                     LoadingState(
@@ -141,6 +155,41 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TagFiltersRow(
+    tags: List<HomeTagFilterUiModel>,
+    selectedTagId: Long?,
+    onSelectTag: (Long?) -> Unit,
+    onSelectAll: () -> Unit,
+    modifier: Modifier = Modifier,
+): Unit {
+    val dimens = MyDiaryDimens.current
+
+    LazyRow(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = dimens.screenPadding),
+        horizontalArrangement = Arrangement.spacedBy(dimens.itemSpacing),
+    ) {
+        item {
+            TagChip(
+                label = stringResource(id = R.string.home_filter_all),
+                isSelected = selectedTagId == null,
+                onClick = onSelectAll,
+            )
+        }
+
+        items(tags, key = { tag -> tag.id }) { tag ->
+            TagChip(
+                label = tag.name,
+                isSelected = selectedTagId == tag.id,
+                onClick = {
+                    onSelectTag(tag.id)
+                },
+            )
         }
     }
 }
@@ -316,5 +365,23 @@ private val HomeUiState.isSearchExpanded: Boolean
             is HomeUiState.Loading -> isSearchExpanded
             is HomeUiState.Success -> isSearchExpanded
             is HomeUiState.Error -> isSearchExpanded
+        }
+    }
+
+private val HomeUiState.availableTags: List<HomeTagFilterUiModel>
+    get() {
+        return when (this) {
+            is HomeUiState.Loading -> availableTags
+            is HomeUiState.Success -> availableTags
+            is HomeUiState.Error -> availableTags
+        }
+    }
+
+private val HomeUiState.selectedTagId: Long?
+    get() {
+        return when (this) {
+            is HomeUiState.Loading -> selectedTagId
+            is HomeUiState.Success -> selectedTagId
+            is HomeUiState.Error -> selectedTagId
         }
     }
