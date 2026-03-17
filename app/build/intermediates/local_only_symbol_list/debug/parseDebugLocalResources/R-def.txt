@@ -1,6 +1,11 @@
 R_DEF: Internal format may change without notice
 local
 string app_name
+string calendar_empty_month
+string calendar_error_title
+string calendar_next_month
+string calendar_previous_month
+string calendar_retry
 string calendar_title
 string detail_created_at
 string detail_delete_button
@@ -54,6 +59,8 @@ string entry_id_value
 string entry_photo_content_description
 string entry_untitled_title
 string go_back
+string home_date_filter_active
+string home_date_filter_clear
 string home_empty_description
 string home_empty_title
 string home_error_description

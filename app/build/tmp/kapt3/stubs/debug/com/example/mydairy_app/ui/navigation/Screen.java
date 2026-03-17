@@ -121,12 +121,23 @@ public abstract class Screen {
         }
     }
     
-    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\u00c6\n\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\u0013\u0010\u0003\u001a\u00020\u00042\b\u0010\u0005\u001a\u0004\u0018\u00010\u0006H\u00d6\u0003J\t\u0010\u0007\u001a\u00020\bH\u00d6\u0001J\t\u0010\t\u001a\u00020\nH\u00d6\u0001\u00a8\u0006\u000b"}, d2 = {"Lcom/example/mydairy_app/ui/navigation/Screen$Home;", "Lcom/example/mydairy_app/ui/navigation/Screen;", "()V", "equals", "", "other", "", "hashCode", "", "toString", "", "app_debug"})
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u00000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\b\u00c6\n\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\u0017\u0010\b\u001a\u00020\u00042\n\b\u0002\u0010\t\u001a\u0004\u0018\u00010\u0007\u00a2\u0006\u0002\u0010\nJ\u0013\u0010\u000b\u001a\u00020\f2\b\u0010\r\u001a\u0004\u0018\u00010\u000eH\u00d6\u0003J\t\u0010\u000f\u001a\u00020\u0010H\u00d6\u0001J\t\u0010\u0011\u001a\u00020\u0004H\u00d6\u0001R\u000e\u0010\u0003\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0086T\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u0012"}, d2 = {"Lcom/example/mydairy_app/ui/navigation/Screen$Home;", "Lcom/example/mydairy_app/ui/navigation/Screen;", "()V", "BASE_ROUTE", "", "DATE_FILTER_ARG", "NO_DATE_FILTER", "", "createRoute", "dateFilterMillis", "(Ljava/lang/Long;)Ljava/lang/String;", "equals", "", "other", "", "hashCode", "", "toString", "app_debug"})
     public static final class Home extends com.example.mydairy_app.ui.navigation.Screen {
+        @org.jetbrains.annotations.NotNull()
+        public static final java.lang.String BASE_ROUTE = "home";
+        @org.jetbrains.annotations.NotNull()
+        public static final java.lang.String DATE_FILTER_ARG = "dateFilter";
+        public static final long NO_DATE_FILTER = -1L;
         @org.jetbrains.annotations.NotNull()
         public static final com.example.mydairy_app.ui.navigation.Screen.Home INSTANCE = null;
         
         private Home() {
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final java.lang.String createRoute(@org.jetbrains.annotations.Nullable()
+        java.lang.Long dateFilterMillis) {
+            return null;
         }
         
         @java.lang.Override()

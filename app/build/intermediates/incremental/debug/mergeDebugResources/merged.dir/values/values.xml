@@ -105,6 +105,11 @@
     <integer name="status_bar_notification_info_maxnum">999</integer>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
     <string name="app_name">MyDiary</string>
+    <string name="calendar_empty_month">No entries in this month.</string>
+    <string name="calendar_error_title">Could not load calendar.</string>
+    <string name="calendar_next_month">Next</string>
+    <string name="calendar_previous_month">Previous</string>
+    <string name="calendar_retry">Retry</string>
     <string name="calendar_title">Calendar</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
@@ -170,6 +175,8 @@
     <string name="entry_photo_content_description">Entry photo preview</string>
     <string name="entry_untitled_title">Untitled Entry</string>
     <string name="go_back">Back</string>
+    <string name="home_date_filter_active">Date: %1$s</string>
+    <string name="home_date_filter_clear">Clear Date</string>
     <string name="home_empty_description">Create your first diary entry to see it here.</string>
     <string name="home_empty_title">No entries yet</string>
     <string name="home_error_description">Try again to load your diary.</string>

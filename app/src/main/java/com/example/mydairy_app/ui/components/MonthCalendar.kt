@@ -119,6 +119,7 @@ private fun DayCell(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ): Unit {
+    val dotColor = MaterialTheme.colorScheme.primary
     Box(
         modifier = modifier
             .height(DAY_CELL_HEIGHT)
@@ -134,7 +135,7 @@ private fun DayCell(
             if (hasEntries) {
                 Canvas(modifier = Modifier.size(DOT_SIZE)) {
                     drawCircle(
-                        color = MaterialTheme.colorScheme.primary,
+                        color = dotColor,
                         radius = size.minDimension / 2f,
                         center = Offset(size.width / 2f, size.height / 2f),
                     )

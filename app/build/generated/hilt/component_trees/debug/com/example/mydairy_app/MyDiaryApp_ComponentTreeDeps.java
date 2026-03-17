@@ -21,6 +21,8 @@ import hilt_aggregated_deps._com_example_mydairy_app_MainActivity_GeneratedInjec
 import hilt_aggregated_deps._com_example_mydairy_app_MyDiaryApp_GeneratedInjector;
 import hilt_aggregated_deps._com_example_mydairy_app_di_DatabaseModule;
 import hilt_aggregated_deps._com_example_mydairy_app_di_RepositoryModule;
+import hilt_aggregated_deps._com_example_mydairy_app_feature_calendar_CalendarViewModel_HiltModules_BindsModule;
+import hilt_aggregated_deps._com_example_mydairy_app_feature_calendar_CalendarViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_example_mydairy_app_feature_detail_DetailViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_example_mydairy_app_feature_detail_DetailViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_example_mydairy_app_feature_editor_EditorViewModel_HiltModules_BindsModule;
@@ -73,6 +75,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_example_mydairy_app_MyDiaryApp_GeneratedInjector.class,
         _com_example_mydairy_app_di_DatabaseModule.class,
         _com_example_mydairy_app_di_RepositoryModule.class,
+        _com_example_mydairy_app_feature_calendar_CalendarViewModel_HiltModules_BindsModule.class,
+        _com_example_mydairy_app_feature_calendar_CalendarViewModel_HiltModules_KeyModule.class,
         _com_example_mydairy_app_feature_detail_DetailViewModel_HiltModules_BindsModule.class,
         _com_example_mydairy_app_feature_detail_DetailViewModel_HiltModules_KeyModule.class,
         _com_example_mydairy_app_feature_editor_EditorViewModel_HiltModules_BindsModule.class,

@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -92,7 +91,6 @@ class CalendarViewModel @Inject constructor(
     private fun observeMonth(): Unit {
         viewModelScope.launch(Dispatchers.IO) {
             displayedMonth
-                .distinctUntilChanged()
                 .flatMapLatest { month ->
                     entryRepository
                         .getEntriesByDate(

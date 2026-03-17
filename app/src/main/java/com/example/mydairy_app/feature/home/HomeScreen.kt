@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -114,9 +115,10 @@ fun HomeScreen(
                 )
             }
 
-            if (uiState.selectedDateFilterLabel != null) {
+            val selectedDateFilterLabel = uiState.selectedDateFilterLabel
+            if (selectedDateFilterLabel != null) {
                 DateFilterBar(
-                    dateLabel = uiState.selectedDateFilterLabel,
+                    dateLabel = selectedDateFilterLabel,
                     onClear = viewModel::onDateFilterCleared,
                     modifier = Modifier
                         .fillMaxWidth()
