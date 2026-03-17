@@ -104,4 +104,11 @@
     <string name="calendar_empty_month">No entries in this month.</string>
     <string name="calendar_error_title">Could not load calendar.</string>
     <string name="calendar_retry">Retry</string>
+    <string name="settings_theme_section_title">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_error_title">Could not load settings.</string>
+    <string name="settings_retry">Retry</string>
+    <string name="settings_message_update_failed">Could not update theme setting.</string>
 </resources>

@@ -39,9 +39,10 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun MyDiaryTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkModeOverride: Boolean? = null,
     content: @Composable () -> Unit,
 ): Unit {
+    val darkTheme = darkModeOverride ?: isSystemInDarkTheme()
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
     CompositionLocalProvider(LocalAppDimens provides MyDiaryDimens.default) {
