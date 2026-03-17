@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<full-backup-content>
-    <include domain="database" path="mydiary.db" />
-    <include domain="database" path="mydiary.db-wal" />
-    <include domain="database" path="mydiary.db-shm" />
-    <exclude domain="file" path="diary_photos/" />
-</full-backup-content>
