@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -177,6 +178,8 @@ fun DetailScreen(
                     model = previewPhotoPath,
                     contentDescription = stringResource(id = R.string.entry_photo_content_description),
                     contentScale = ContentScale.Fit,
+                    placeholder = painterResource(id = android.R.drawable.ic_menu_gallery),
+                    error = painterResource(id = android.R.drawable.ic_menu_report_image),
                     modifier = Modifier.fillMaxWidth(),
                 )
             },

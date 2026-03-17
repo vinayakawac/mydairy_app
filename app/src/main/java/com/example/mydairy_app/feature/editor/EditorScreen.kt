@@ -1,7 +1,9 @@
 package com.example.mydairy_app.feature.editor
 
 import android.app.TimePickerDialog
+import android.content.ActivityNotFoundException
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,8 +71,14 @@ fun EditorScreen(
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
-    val galleryLauncher = rememberLauncherForActivityResult(
+    val legacyGalleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
+    ) { selectedUri ->
+        viewModel.onGalleryPhotoPicked(selectedUri?.toString())
+    }
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
     ) { selectedUri ->
         viewModel.onGalleryPhotoPicked(selectedUri?.toString())
     }
@@ -92,7 +100,12 @@ fun EditorScreen(
 
                 is EditorUiEvent.LaunchCamera -> {
                     cameraOutputUri = event.outputUri
-                    cameraLauncher.launch(Uri.parse(event.outputUri))
+                    try {
+                        cameraLauncher.launch(Uri.parse(event.outputUri))
+                    } catch (_: ActivityNotFoundException) {
+                        cameraOutputUri = null
+                        viewModel.onCameraLaunchFailed()
+                    }
                 }
 
                 is EditorUiEvent.ShowMessage -> {
@@ -172,7 +185,29 @@ fun EditorScreen(
                     onBodyChanged = viewModel::onBodyChanged,
                     onPickDate = { showDatePicker = true },
                     onPickTime = { showTimePicker = true },
-                    onAddGallery = { galleryLauncher.launch(IMAGE_MIME_TYPE) },
+                    onAddGallery = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            try {
+                                photoPickerLauncher.launch(
+                                    ActivityResultContracts.PickVisualMedia.Request(
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly,
+                                    ),
+                                )
+                            } catch (_: ActivityNotFoundException) {
+                                try {
+                                    legacyGalleryLauncher.launch(IMAGE_MIME_TYPE)
+                                } catch (_: ActivityNotFoundException) {
+                                    viewModel.onGalleryPickerFailed()
+                                }
+                            }
+                        } else {
+                            try {
+                                legacyGalleryLauncher.launch(IMAGE_MIME_TYPE)
+                            } catch (_: ActivityNotFoundException) {
+                                viewModel.onGalleryPickerFailed()
+                            }
+                        }
+                    },
                     onAddCamera = viewModel::onCameraCaptureRequested,
                     onOpenTagSheet = viewModel::onOpenTagSheet,
                     onRemovePhoto = viewModel::onRemovePhoto,

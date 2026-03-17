@@ -203,6 +203,14 @@ class EditorViewModel @Inject constructor(
         }
     }
 
+    fun onCameraLaunchFailed(): Unit {
+        emitMessage(R.string.editor_message_camera_unavailable)
+    }
+
+    fun onGalleryPickerFailed(): Unit {
+        emitMessage(R.string.editor_message_gallery_failed)
+    }
+
     fun onRemovePhoto(photoKey: String): Unit {
         val split = photoKey.split(PHOTO_KEY_SEPARATOR)
         if (split.size != PHOTO_KEY_PARTS) {
@@ -527,6 +535,12 @@ class EditorViewModel @Inject constructor(
 
     private fun List<String>.removeAtIndex(index: Int): List<String> {
         return filterIndexed { itemIndex, _ -> itemIndex != index }
+    }
+
+    private fun emitMessage(@StringRes messageRes: Int): Unit {
+        viewModelScope.launch {
+            _uiEvent.emit(EditorUiEvent.ShowMessage(messageRes = messageRes))
+        }
     }
 
     private companion object {
