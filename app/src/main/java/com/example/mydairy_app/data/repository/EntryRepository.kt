@@ -64,11 +64,12 @@ class DefaultEntryRepository @Inject constructor(
 
     override fun searchEntries(query: String): Flow<List<Entry>> {
         val normalizedQuery = query.trim()
-        if (normalizedQuery.isEmpty()) {
+        val ftsQuery = buildFtsMatchQuery(normalizedQuery)
+        if (ftsQuery == null) {
             return getAllEntries()
         }
 
-        return entryDao.searchEntries(normalizedQuery).map { entries ->
+        return entryDao.searchEntries(ftsQuery).map { entries ->
             entries.map(EntryWithTags::toDomain)
         }
     }
@@ -106,6 +107,11 @@ class DefaultEntryRepository @Inject constructor(
     override suspend fun insertEntry(entry: Entry, tagIds: Set<Long>): Long {
         return appDatabase.withTransaction {
             val insertedEntryId = entryDao.insertEntry(entry.toEntityForInsert())
+            syncEntryFts(
+                entryId = insertedEntryId,
+                title = entry.title,
+                body = entry.body,
+            )
             updateEntryTags(entryId = insertedEntryId, tagIds = tagIds)
             insertedEntryId
         }
@@ -114,6 +120,11 @@ class DefaultEntryRepository @Inject constructor(
     override suspend fun updateEntry(entry: Entry, tagIds: Set<Long>): Unit {
         appDatabase.withTransaction {
             entryDao.updateEntry(entry.toEntity())
+            syncEntryFts(
+                entryId = entry.id,
+                title = entry.title,
+                body = entry.body,
+            )
             updateEntryTags(entryId = entry.id, tagIds = tagIds)
         }
     }
@@ -125,6 +136,7 @@ class DefaultEntryRepository @Inject constructor(
         )
         appDatabase.withTransaction {
             entryTagDao.deleteCrossRefsForEntry(entryId)
+            entryDao.deleteFtsEntry(entryId)
             entryDao.deleteEntryById(entryId)
         }
     }
@@ -139,6 +151,11 @@ class DefaultEntryRepository @Inject constructor(
                     updatedAt = request.updatedAt,
                     photoPaths = request.existingPhotoPaths,
                 ),
+            )
+            syncEntryFts(
+                entryId = insertedEntryId,
+                title = normalizedTitle,
+                body = request.body,
             )
             updateEntryTags(entryId = insertedEntryId, tagIds = request.tagIds)
             insertedEntryId
@@ -196,6 +213,11 @@ class DefaultEntryRepository @Inject constructor(
                     photoPaths = updatedPhotoPaths,
                 ),
             )
+            syncEntryFts(
+                entryId = entryId,
+                title = normalizedTitle,
+                body = request.body,
+            )
             updateEntryTags(entryId = entryId, tagIds = request.tagIds)
         }
 
@@ -236,12 +258,51 @@ class DefaultEntryRepository @Inject constructor(
         }
     }
 
+    private suspend fun syncEntryFts(entryId: Long, title: String?, body: String): Unit {
+        entryDao.deleteFtsEntry(entryId)
+        entryDao.insertFtsEntry(
+            entryId = entryId,
+            title = title,
+            body = body,
+        )
+    }
+
+    private fun buildFtsMatchQuery(query: String): String? {
+        val tokens = query
+            .split(FTS_TOKEN_SPLIT_REGEX)
+            .map(::sanitizeFtsToken)
+            .filter(String::isNotEmpty)
+            .map { token ->
+                "\"$token\"*"
+            }
+
+        return if (tokens.isEmpty()) {
+            null
+        } else {
+            tokens.joinToString(separator = FTS_TOKEN_JOINER)
+        }
+    }
+
+    private fun sanitizeFtsToken(token: String): String {
+        return token
+            .replace(FTS_DOUBLE_QUOTE, EMPTY_STRING)
+            .replace(FTS_ASTERISK, EMPTY_STRING)
+            .replace(FTS_MINUS, EMPTY_STRING)
+            .trim()
+    }
+
     private fun createTemporaryEntryDirectoryId(): Long {
         return -System.currentTimeMillis()
     }
 
     private companion object {
         const val INVALID_ENTRY_ID: Long = -1L
+        const val EMPTY_STRING: String = ""
+        const val FTS_DOUBLE_QUOTE: String = "\""
+        const val FTS_ASTERISK: String = "*"
+        const val FTS_MINUS: String = "-"
+        const val FTS_TOKEN_JOINER: String = " AND "
+        val FTS_TOKEN_SPLIT_REGEX: Regex = Regex("\\s+")
     }
 }
 

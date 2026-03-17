@@ -21,6 +21,12 @@
     <string name="home_new_entry_fab">New</string>
     <string name="home_empty_title">No entries yet</string>
     <string name="home_empty_description">Create your first diary entry to see it here.</string>
+    <string name="home_search_open">Search</string>
+    <string name="home_search_close">Close Search</string>
+    <string name="home_search_placeholder">Search entries</string>
+    <string name="home_search_clear">Clear</string>
+    <string name="home_search_empty_title">No matching entries</string>
+    <string name="home_search_empty_description">Try a different keyword.</string>
     <string name="home_error_title">Could not load entries</string>
     <string name="home_error_description">Try again to load your diary.</string>
     <string name="home_retry">Retry</string>

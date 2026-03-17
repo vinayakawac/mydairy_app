@@ -272,6 +272,12 @@ int string home_error_description 0x7f0a0036
 int string home_error_title 0x7f0a0037
 int string home_new_entry_fab 0x7f0a0038
 int string home_retry 0x7f0a0039
+int string home_search_clear 0x7f0a009c
+int string home_search_close 0x7f0a009d
+int string home_search_empty_description 0x7f0a009e
+int string home_search_empty_title 0x7f0a009f
+int string home_search_open 0x7f0a00a0
+int string home_search_placeholder 0x7f0a00a1
 int string home_title 0x7f0a003a
 int string in_progress 0x7f0a003b
 int string indeterminate 0x7f0a003c

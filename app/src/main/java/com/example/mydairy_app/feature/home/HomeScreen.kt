@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,6 +48,23 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.home_title)) },
                 actions = {
+                    TextButton(
+                        onClick = {
+                            viewModel.onSearchExpandedChanged(
+                                expanded = !uiState.isSearchExpanded,
+                            )
+                        },
+                    ) {
+                        Text(
+                            text = stringResource(
+                                id = if (uiState.isSearchExpanded) {
+                                    R.string.home_search_close
+                                } else {
+                                    R.string.home_search_open
+                                },
+                            ),
+                        )
+                    }
                     TextButton(onClick = onOpenCalendar) {
                         Text(text = stringResource(id = R.string.open_calendar))
                     }
@@ -64,45 +83,91 @@ fun HomeScreen(
             }
         },
     ) { innerPadding ->
-        when (val state = uiState) {
-            HomeUiState.Loading -> {
-                LoadingState(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            if (uiState.isSearchExpanded) {
+                SearchField(
+                    query = uiState.searchQuery,
+                    onQueryChange = viewModel::onSearchQueryChanged,
+                    onClear = viewModel::onClearSearch,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                        .fillMaxWidth()
+                        .padding(horizontal = dimens.screenPadding)
+                        .padding(top = dimens.itemSpacing),
                 )
             }
 
-            is HomeUiState.Error -> {
-                ErrorState(
-                    onRetry = viewModel::onRetryLoad,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(dimens.screenPadding),
-                )
-            }
+            when (val state = uiState) {
+                is HomeUiState.Loading -> {
+                    LoadingState(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    )
+                }
 
-            is HomeUiState.Success -> {
-                if (state.sections.isEmpty()) {
-                    EmptyState(
+                is HomeUiState.Error -> {
+                    ErrorState(
+                        onRetry = viewModel::onRetryLoad,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(innerPadding)
                             .padding(dimens.screenPadding),
                     )
-                } else {
-                    EntrySectionList(
-                        sections = state.sections,
-                        onOpenDetail = onOpenDetail,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                    )
+                }
+
+                is HomeUiState.Success -> {
+                    if (state.sections.isEmpty()) {
+                        if (state.searchQuery.isBlank()) {
+                            EmptyState(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(dimens.screenPadding),
+                            )
+                        } else {
+                            SearchEmptyState(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(dimens.screenPadding),
+                            )
+                        }
+                    } else {
+                        EntrySectionList(
+                            sections = state.sections,
+                            onOpenDetail = onOpenDetail,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun SearchField(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onClear: () -> Unit,
+    modifier: Modifier = Modifier,
+): Unit {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = modifier,
+        singleLine = true,
+        placeholder = {
+            Text(text = stringResource(id = R.string.home_search_placeholder))
+        },
+        trailingIcon = {
+            if (query.isNotBlank()) {
+                TextButton(onClick = onClear) {
+                    Text(text = stringResource(id = R.string.home_search_clear))
+                }
+            }
+        },
+    )
 }
 
 @Composable
@@ -181,6 +246,32 @@ private fun EmptyState(
 }
 
 @Composable
+private fun SearchEmptyState(
+    modifier: Modifier = Modifier,
+): Unit {
+    val dimens = MyDiaryDimens.current
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(dimens.itemSpacing),
+        ) {
+            Text(
+                text = stringResource(id = R.string.home_search_empty_title),
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = stringResource(id = R.string.home_search_empty_description),
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
 private fun ErrorState(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
@@ -209,3 +300,21 @@ private fun ErrorState(
         }
     }
 }
+
+private val HomeUiState.searchQuery: String
+    get() {
+        return when (this) {
+            is HomeUiState.Loading -> searchQuery
+            is HomeUiState.Success -> searchQuery
+            is HomeUiState.Error -> searchQuery
+        }
+    }
+
+private val HomeUiState.isSearchExpanded: Boolean
+    get() {
+        return when (this) {
+            is HomeUiState.Loading -> isSearchExpanded
+            is HomeUiState.Success -> isSearchExpanded
+            is HomeUiState.Error -> isSearchExpanded
+        }
+    }

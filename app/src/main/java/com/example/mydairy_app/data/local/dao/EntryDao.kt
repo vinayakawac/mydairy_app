@@ -45,6 +45,12 @@ interface EntryDao {
     @Update
     suspend fun updateEntry(entry: EntryEntity): Int
 
+    @Query("DELETE FROM entries_fts WHERE rowid = :entryId")
+    suspend fun deleteFtsEntry(entryId: Long): Int
+
+    @Query("INSERT INTO entries_fts(rowid, title, body) VALUES(:entryId, :title, :body)")
+    suspend fun insertFtsEntry(entryId: Long, title: String?, body: String): Long
+
     @Delete
     suspend fun deleteEntry(entry: EntryEntity): Int
 

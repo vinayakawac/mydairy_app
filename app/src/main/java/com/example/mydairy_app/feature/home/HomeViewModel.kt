@@ -18,18 +18,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed interface HomeUiState {
-    data object Loading : HomeUiState
+    data class Loading(
+        val searchQuery: String,
+        val isSearchExpanded: Boolean,
+    ) : HomeUiState
 
     data class Success(
         val sections: List<HomeSectionUiModel>,
+        val searchQuery: String,
+        val isSearchExpanded: Boolean,
     ) : HomeUiState
 
     data class Error(
         val cause: Throwable,
+        val searchQuery: String,
+        val isSearchExpanded: Boolean,
     ) : HomeUiState
 }
 
@@ -52,8 +63,16 @@ class HomeViewModel @Inject constructor(
     private val entryRepository: EntryRepository,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
+    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(
+        HomeUiState.Loading(
+            searchQuery = EMPTY_SEARCH_QUERY,
+            isSearchExpanded = false,
+        ),
+    )
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val searchQuery: MutableStateFlow<String> = MutableStateFlow(EMPTY_SEARCH_QUERY)
+    private val isSearchExpanded: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private val zoneId: ZoneId = ZoneId.systemDefault()
     private val dayFormatter: DateTimeFormatter =
@@ -69,20 +88,65 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onRetryLoad(): Unit {
-        _uiState.value = HomeUiState.Loading
+        _uiState.value = HomeUiState.Loading(
+            searchQuery = searchQuery.value,
+            isSearchExpanded = isSearchExpanded.value,
+        )
         observeEntries()
+    }
+
+    fun onSearchQueryChanged(query: String): Unit {
+        searchQuery.value = query
+        _uiState.update { state ->
+            state.withSearch(
+                searchQuery = query,
+                isSearchExpanded = isSearchExpanded.value,
+            )
+        }
+    }
+
+    fun onSearchExpandedChanged(expanded: Boolean): Unit {
+        isSearchExpanded.value = expanded
+        _uiState.update { state ->
+            state.withSearch(
+                searchQuery = searchQuery.value,
+                isSearchExpanded = expanded,
+            )
+        }
+    }
+
+    fun onClearSearch(): Unit {
+        onSearchQueryChanged(EMPTY_SEARCH_QUERY)
     }
 
     private fun observeEntries(): Unit {
         entriesJob?.cancel()
         entriesJob = viewModelScope.launch(Dispatchers.IO) {
-            entryRepository.getAllEntries()
+            searchQuery
+                .debounce(SEARCH_DEBOUNCE_MILLIS)
+                .map(String::trim)
+                .distinctUntilChanged()
+                .flatMapLatest { query ->
+                    if (query.isEmpty()) {
+                        entryRepository.getAllEntries()
+                    } else {
+                        entryRepository.searchEntries(query)
+                    }
+                }
                 .map(::toSections)
                 .catch { throwable ->
-                    _uiState.value = HomeUiState.Error(cause = throwable)
+                    _uiState.value = HomeUiState.Error(
+                        cause = throwable,
+                        searchQuery = searchQuery.value,
+                        isSearchExpanded = isSearchExpanded.value,
+                    )
                 }
                 .collectLatest { sections ->
-                    _uiState.value = HomeUiState.Success(sections = sections)
+                    _uiState.value = HomeUiState.Success(
+                        sections = sections,
+                        searchQuery = searchQuery.value,
+                        isSearchExpanded = isSearchExpanded.value,
+                    )
                 }
         }
     }
@@ -149,5 +213,26 @@ class HomeViewModel @Inject constructor(
     private companion object {
         const val BODY_PREVIEW_MAX_CHARS: Int = 140
         const val PREVIEW_SUFFIX: String = "..."
+        const val SEARCH_DEBOUNCE_MILLIS: Long = 300L
+        const val EMPTY_SEARCH_QUERY: String = ""
+    }
+}
+
+private fun HomeUiState.withSearch(searchQuery: String, isSearchExpanded: Boolean): HomeUiState {
+    return when (this) {
+        is HomeUiState.Loading -> this.copy(
+            searchQuery = searchQuery,
+            isSearchExpanded = isSearchExpanded,
+        )
+
+        is HomeUiState.Success -> this.copy(
+            searchQuery = searchQuery,
+            isSearchExpanded = isSearchExpanded,
+        )
+
+        is HomeUiState.Error -> this.copy(
+            searchQuery = searchQuery,
+            isSearchExpanded = isSearchExpanded,
+        )
     }
 }

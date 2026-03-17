@@ -51,6 +51,10 @@ public final class EntryDao_Impl implements EntryDao {
 
   private final EntityDeletionOrUpdateAdapter<EntryEntity> __updateAdapterOfEntryEntity;
 
+  private final SharedSQLiteStatement __preparedStmtOfDeleteFtsEntry;
+
+  private final SharedSQLiteStatement __preparedStmtOfInsertFtsEntry;
+
   private final SharedSQLiteStatement __preparedStmtOfDeleteEntryById;
 
   public EntryDao_Impl(@NonNull final RoomDatabase __db) {
@@ -113,6 +117,22 @@ public final class EntryDao_Impl implements EntryDao {
         final String _tmp = __converters.toPhotoPaths(entity.getPhotoPaths());
         statement.bindString(6, _tmp);
         statement.bindLong(7, entity.getId());
+      }
+    };
+    this.__preparedStmtOfDeleteFtsEntry = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "DELETE FROM entries_fts WHERE rowid = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfInsertFtsEntry = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "INSERT INTO entries_fts(rowid, title, body) VALUES(?, ?, ?)";
+        return _query;
       }
     };
     this.__preparedStmtOfDeleteEntryById = new SharedSQLiteStatement(__db) {
@@ -178,6 +198,66 @@ public final class EntryDao_Impl implements EntryDao {
           return _total;
         } finally {
           __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object deleteFtsEntry(final long entryId,
+      final Continuation<? super Integer> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Integer>() {
+      @Override
+      @NonNull
+      public Integer call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteFtsEntry.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, entryId);
+        try {
+          __db.beginTransaction();
+          try {
+            final Integer _result = _stmt.executeUpdateDelete();
+            __db.setTransactionSuccessful();
+            return _result;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfDeleteFtsEntry.release(_stmt);
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object insertFtsEntry(final long entryId, final String title, final String body,
+      final Continuation<? super Long> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
+      @Override
+      @NonNull
+      public Long call() throws Exception {
+        final SupportSQLiteStatement _stmt = __preparedStmtOfInsertFtsEntry.acquire();
+        int _argIndex = 1;
+        _stmt.bindLong(_argIndex, entryId);
+        _argIndex = 2;
+        if (title == null) {
+          _stmt.bindNull(_argIndex);
+        } else {
+          _stmt.bindString(_argIndex, title);
+        }
+        _argIndex = 3;
+        _stmt.bindString(_argIndex, body);
+        try {
+          __db.beginTransaction();
+          try {
+            final Long _result = _stmt.executeInsert();
+            __db.setTransactionSuccessful();
+            return _result;
+          } finally {
+            __db.endTransaction();
+          }
+        } finally {
+          __preparedStmtOfInsertFtsEntry.release(_stmt);
         }
       }
     }, $completion);

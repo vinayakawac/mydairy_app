@@ -60,6 +60,12 @@ string home_error_description
 string home_error_title
 string home_new_entry_fab
 string home_retry
+string home_search_clear
+string home_search_close
+string home_search_empty_description
+string home_search_empty_title
+string home_search_open
+string home_search_placeholder
 string home_title
 string new_entry_mode
 string open_calendar
