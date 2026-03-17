@@ -1,13 +1,15 @@
 package com.example.mydairy_app.feature.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.mydairy_app.data.repository.EntryRepository
 import com.example.mydairy_app.data.repository.TagRepository
 import com.example.mydairy_app.domain.model.Entry
-import com.example.mydairy_app.domain.model.Tag
+import com.example.mydairy_app.ui.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -34,6 +36,7 @@ sealed interface HomeUiState {
         val isSearchExpanded: Boolean,
         val availableTags: List<HomeTagFilterUiModel>,
         val selectedTagId: Long?,
+        val selectedDateFilterLabel: String?,
     ) : HomeUiState
 
     data class Success(
@@ -42,6 +45,7 @@ sealed interface HomeUiState {
         val isSearchExpanded: Boolean,
         val availableTags: List<HomeTagFilterUiModel>,
         val selectedTagId: Long?,
+        val selectedDateFilterLabel: String?,
     ) : HomeUiState
 
     data class Error(
@@ -50,6 +54,7 @@ sealed interface HomeUiState {
         val isSearchExpanded: Boolean,
         val availableTags: List<HomeTagFilterUiModel>,
         val selectedTagId: Long?,
+        val selectedDateFilterLabel: String?,
     ) : HomeUiState
 }
 
@@ -74,9 +79,14 @@ data class HomeTagFilterUiModel(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val entryRepository: EntryRepository,
     private val tagRepository: TagRepository,
 ) : ViewModel() {
+
+    private val initialDateFilterMillis: Long? = savedStateHandle
+        .get<Long>(Screen.Home.DATE_FILTER_ARG)
+        ?.takeIf { value -> value != Screen.Home.NO_DATE_FILTER }
 
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(
         HomeUiState.Loading(
@@ -84,6 +94,7 @@ class HomeViewModel @Inject constructor(
             isSearchExpanded = false,
             availableTags = emptyList(),
             selectedTagId = null,
+            selectedDateFilterLabel = initialDateFilterMillis?.let(::formatDay),
         ),
     )
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -91,6 +102,7 @@ class HomeViewModel @Inject constructor(
     private val searchQuery: MutableStateFlow<String> = MutableStateFlow(EMPTY_SEARCH_QUERY)
     private val isSearchExpanded: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val selectedTagId: MutableStateFlow<Long?> = MutableStateFlow(null)
+    private val selectedDateFilterMillis: MutableStateFlow<Long?> = MutableStateFlow(initialDateFilterMillis)
 
     private val zoneId: ZoneId = ZoneId.systemDefault()
     private val dayFormatter: DateTimeFormatter =
@@ -113,6 +125,7 @@ class HomeViewModel @Inject constructor(
             isSearchExpanded = isSearchExpanded.value,
             availableTags = uiState.value.availableTags,
             selectedTagId = selectedTagId.value,
+            selectedDateFilterLabel = selectedDateFilterMillis.value?.let(::formatDay),
         )
         observeEntries()
         observeTags()
@@ -161,6 +174,13 @@ class HomeViewModel @Inject constructor(
         onTagFilterSelected(null)
     }
 
+    fun onDateFilterCleared(): Unit {
+        selectedDateFilterMillis.value = null
+        _uiState.update { state ->
+            state.withDateFilter(selectedDateFilterLabel = null)
+        }
+    }
+
     private fun observeEntries(): Unit {
         entriesJob?.cancel()
         entriesJob = viewModelScope.launch(Dispatchers.IO) {
@@ -170,19 +190,21 @@ class HomeViewModel @Inject constructor(
                     .map(String::trim)
                     .distinctUntilChanged(),
                 selectedTagId,
-            ) { query, activeTagId ->
-                query to activeTagId
+                selectedDateFilterMillis,
+            ) { query, activeTagId, activeDateFilter ->
+                Triple(query, activeTagId, activeDateFilter)
             }
-                .flatMapLatest { (query, activeTagId) ->
+                .flatMapLatest { (query, activeTagId, activeDateFilter) ->
                     if (query.isEmpty()) {
                         entryRepository.getAllEntries()
                     } else {
                         entryRepository.searchEntries(query)
                     }
                         .map { entries ->
-                            filterEntriesByTag(
+                            filterEntries(
                                 entries = entries,
                                 tagId = activeTagId,
+                                dateFilterMillis = activeDateFilter,
                             )
                         }
                 }
@@ -194,6 +216,7 @@ class HomeViewModel @Inject constructor(
                         isSearchExpanded = isSearchExpanded.value,
                         availableTags = _uiState.value.availableTags,
                         selectedTagId = selectedTagId.value,
+                        selectedDateFilterLabel = selectedDateFilterMillis.value?.let(::formatDay),
                     )
                 }
                 .collectLatest { sections ->
@@ -203,6 +226,7 @@ class HomeViewModel @Inject constructor(
                         isSearchExpanded = isSearchExpanded.value,
                         availableTags = _uiState.value.availableTags,
                         selectedTagId = selectedTagId.value,
+                        selectedDateFilterLabel = selectedDateFilterMillis.value?.let(::formatDay),
                     )
                 }
         }
@@ -227,6 +251,7 @@ class HomeViewModel @Inject constructor(
                         isSearchExpanded = isSearchExpanded.value,
                         availableTags = _uiState.value.availableTags,
                         selectedTagId = selectedTagId.value,
+                        selectedDateFilterLabel = selectedDateFilterMillis.value?.let(::formatDay),
                     )
                 }
                 .collectLatest { tags ->
@@ -246,14 +271,32 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun filterEntriesByTag(entries: List<Entry>, tagId: Long?): List<Entry> {
-        if (tagId == null) {
-            return entries
+    private fun filterEntries(entries: List<Entry>, tagId: Long?, dateFilterMillis: Long?): List<Entry> {
+        val dateFiltered = if (dateFilterMillis == null) {
+            entries
+        } else {
+            val targetDate = Instant
+                .ofEpochMilli(dateFilterMillis)
+                .atZone(zoneId)
+                .toLocalDate()
+            entries.filter { entry ->
+                entryCreatedDate(entry.createdAt) == targetDate
+            }
         }
 
-        return entries.filter { entry ->
+        if (tagId == null) {
+            return dateFiltered
+        }
+
+        return dateFiltered.filter { entry ->
             entry.tags.any { tag -> tag.id == tagId }
         }
+    }
+
+    private fun entryCreatedDate(epochMillis: Long): LocalDate {
+        return Instant.ofEpochMilli(epochMillis)
+            .atZone(zoneId)
+            .toLocalDate()
     }
 
     private fun toSections(entries: List<Entry>): List<HomeSectionUiModel> {
@@ -360,6 +403,22 @@ private fun HomeUiState.withTagFilters(
         is HomeUiState.Error -> this.copy(
             availableTags = availableTags,
             selectedTagId = selectedTagId,
+        )
+    }
+}
+
+private fun HomeUiState.withDateFilter(selectedDateFilterLabel: String?): HomeUiState {
+    return when (this) {
+        is HomeUiState.Loading -> this.copy(
+            selectedDateFilterLabel = selectedDateFilterLabel,
+        )
+
+        is HomeUiState.Success -> this.copy(
+            selectedDateFilterLabel = selectedDateFilterLabel,
+        )
+
+        is HomeUiState.Error -> this.copy(
+            selectedDateFilterLabel = selectedDateFilterLabel,
         )
     }
 }

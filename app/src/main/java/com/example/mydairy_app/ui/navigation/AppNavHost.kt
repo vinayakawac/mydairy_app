@@ -19,9 +19,17 @@ fun AppNavHost(): Unit {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Home.createRoute(),
     ) {
-        composable(route = Screen.Home.route) {
+        composable(
+            route = Screen.Home.route,
+            arguments = listOf(
+                navArgument(Screen.Home.DATE_FILTER_ARG) {
+                    type = NavType.LongType
+                    defaultValue = Screen.Home.NO_DATE_FILTER
+                },
+            ),
+        ) {
             HomeScreen(
                 onOpenEditor = { entryId ->
                     navController.navigate(Screen.Editor.createRoute(entryId))
@@ -79,6 +87,13 @@ fun AppNavHost(): Unit {
         composable(route = Screen.Calendar.route) {
             CalendarScreen(
                 onBack = { navController.popBackStack() },
+                onSelectDate = { dateStartMillis ->
+                    navController.navigate(Screen.Home.createRoute(dateStartMillis)) {
+                        popUpTo(Screen.Home.route) {
+                            inclusive = true
+                        }
+                    }
+                },
             )
         }
 

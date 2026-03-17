@@ -28,6 +28,8 @@
     <string name="home_search_empty_title">No matching entries</string>
     <string name="home_search_empty_description">Try a different keyword.</string>
     <string name="home_filter_all">All</string>
+    <string name="home_date_filter_active">Date: %1$s</string>
+    <string name="home_date_filter_clear">Clear Date</string>
     <string name="home_error_title">Could not load entries</string>
     <string name="home_error_description">Try again to load your diary.</string>
     <string name="home_retry">Retry</string>
@@ -97,4 +99,9 @@
     <string name="tags_message_create_failed">Could not create tag.</string>
     <string name="tags_message_rename_failed">Could not rename tag.</string>
     <string name="tags_message_delete_failed">Could not delete tag.</string>
+    <string name="calendar_previous_month">Previous</string>
+    <string name="calendar_next_month">Next</string>
+    <string name="calendar_empty_month">No entries in this month.</string>
+    <string name="calendar_error_title">Could not load calendar.</string>
+    <string name="calendar_retry">Retry</string>
 </resources>

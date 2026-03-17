@@ -114,6 +114,17 @@ fun HomeScreen(
                 )
             }
 
+            if (uiState.selectedDateFilterLabel != null) {
+                DateFilterBar(
+                    dateLabel = uiState.selectedDateFilterLabel,
+                    onClear = viewModel::onDateFilterCleared,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dimens.screenPadding)
+                        .padding(top = dimens.itemSpacing),
+                )
+            }
+
             when (val state = uiState) {
                 is HomeUiState.Loading -> {
                     LoadingState(
@@ -133,7 +144,7 @@ fun HomeScreen(
 
                 is HomeUiState.Success -> {
                     if (state.sections.isEmpty()) {
-                        if (state.searchQuery.isBlank()) {
+                        if (state.searchQuery.isBlank() && state.selectedTagId == null && state.selectedDateFilterLabel == null) {
                             EmptyState(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -155,6 +166,26 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun DateFilterBar(
+    dateLabel: String,
+    onClear: () -> Unit,
+    modifier: Modifier = Modifier,
+): Unit {
+    val dimens = MyDiaryDimens.current
+
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(text = stringResource(id = R.string.home_date_filter_active, dateLabel))
+        TextButton(onClick = onClear) {
+            Text(text = stringResource(id = R.string.home_date_filter_clear))
         }
     }
 }
@@ -383,5 +414,14 @@ private val HomeUiState.selectedTagId: Long?
             is HomeUiState.Loading -> selectedTagId
             is HomeUiState.Success -> selectedTagId
             is HomeUiState.Error -> selectedTagId
+        }
+    }
+
+private val HomeUiState.selectedDateFilterLabel: String?
+    get() {
+        return when (this) {
+            is HomeUiState.Loading -> selectedDateFilterLabel
+            is HomeUiState.Success -> selectedDateFilterLabel
+            is HomeUiState.Error -> selectedDateFilterLabel
         }
     }
