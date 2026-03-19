@@ -127,7 +127,8 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = TagFiltersRowHorizontalPadding,
+                            start = TagFiltersRowHorizontalPadding,
+                            end = TagFiltersRowHorizontalPadding,
                             top = TagFiltersRowTopPadding,
                         ),
                 )
