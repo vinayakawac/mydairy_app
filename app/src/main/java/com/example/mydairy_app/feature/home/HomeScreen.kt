@@ -165,7 +165,13 @@ fun HomeScreen(
 
                 is HomeUiState.Success -> {
                     if (state.sections.isEmpty()) {
-                        if (state.searchQuery.isBlank() && state.selectedTagId == null && state.selectedDateFilterLabel == null) {
+                        if (state.selectedDateFilterLabel != null) {
+                            DateEmptyState(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(dimens.screenPadding),
+                            )
+                        } else if (state.searchQuery.isBlank() && state.selectedTagId == null) {
                             EmptyState(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -366,6 +372,28 @@ private fun SearchEmptyState(
             )
             Text(
                 text = stringResource(id = R.string.home_search_empty_description),
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DateEmptyState(
+    modifier: Modifier = Modifier,
+): Unit {
+    val dimens = MyDiaryDimens.current
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(dimens.itemSpacing),
+        ) {
+            Text(
+                text = stringResource(id = R.string.home_date_empty_description),
                 textAlign = TextAlign.Center,
             )
         }

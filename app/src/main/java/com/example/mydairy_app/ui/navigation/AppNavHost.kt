@@ -93,9 +93,10 @@ fun AppNavHost(): Unit {
                 onBack = { navController.popBackStack() },
                 onSelectDate = { dateStartMillis ->
                     navController.navigate(Screen.Home.createRoute(dateStartMillis)) {
-                        popUpTo(Screen.Home.route) {
-                            inclusive = true
+                        popUpTo(Screen.Home.BASE_ROUTE) {
+                            inclusive = false
                         }
+                        launchSingleTop = true
                     }
                 },
             )

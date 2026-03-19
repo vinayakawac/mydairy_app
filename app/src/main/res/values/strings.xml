@@ -27,6 +27,7 @@
     <string name="home_search_clear">Clear</string>
     <string name="home_search_empty_title">No matching entries</string>
     <string name="home_search_empty_description">Try a different keyword.</string>
+    <string name="home_date_empty_description">No entries for this day. Tap + to add one.</string>
     <string name="home_filter_all">All</string>
     <string name="home_date_filter_active">Date: %1$s</string>
     <string name="home_date_filter_clear">Clear Date</string>
