@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mydairy_app.feature.agent.AgentScreen
 import com.example.mydairy_app.feature.calendar.CalendarScreen
 import com.example.mydairy_app.feature.detail.DetailScreen
 import com.example.mydairy_app.feature.editor.EditorScreen
@@ -45,6 +46,9 @@ fun AppNavHost(): Unit {
                 },
                 onOpenSettings = {
                     navController.navigate(Screen.Settings.route)
+                },
+                onOpenAgent = {
+                    navController.navigate(Screen.Agent.route)
                 },
             )
         }
@@ -105,6 +109,12 @@ fun AppNavHost(): Unit {
 
         composable(route = Screen.Settings.route) {
             SettingsScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
+
+        composable(route = Screen.Agent.route) {
+            AgentScreen(
                 onBack = { navController.popBackStack() },
             )
         }

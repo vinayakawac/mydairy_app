@@ -13,6 +13,7 @@ sealed class Screen(val route: String) {
     data object Calendar : Screen("calendar")
     data object TagManager : Screen("tags")
     data object Settings : Screen("settings")
+    data object Agent : Screen("agent")
 
     data object Detail : Screen("detail/{entryId}") {
         const val ENTRY_ID_ARG: String = "entryId"

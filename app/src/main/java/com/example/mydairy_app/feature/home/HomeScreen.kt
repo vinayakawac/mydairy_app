@@ -11,12 +11,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -26,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mydairy_app.R
@@ -42,6 +49,7 @@ fun HomeScreen(
     onOpenCalendar: () -> Unit,
     onOpenTagManager: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenAgent: () -> Unit,
 ): Unit {
     val dimens = MyDiaryDimens.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,38 +59,45 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.home_title)) },
                 actions = {
-                    TextButton(
+                    TextButton(onClick = onOpenCalendar) {
+                        Text(text = stringResource(id = R.string.calendar_title))
+                    }
+                    TextButton(onClick = onOpenTagManager) {
+                        Text(text = stringResource(id = R.string.tags_title))
+                    }
+                    TextButton(onClick = onOpenSettings) {
+                        Text(text = stringResource(id = R.string.settings_title))
+                    }
+                    IconButton(
                         onClick = {
                             viewModel.onSearchExpandedChanged(
                                 expanded = !uiState.isSearchExpanded,
                             )
                         },
                     ) {
-                        Text(
-                            text = stringResource(
-                                id = if (uiState.isSearchExpanded) {
-                                    R.string.home_search_close
-                                } else {
-                                    R.string.home_search_open
-                                },
-                            ),
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(id = R.string.home_search_open),
                         )
-                    }
-                    TextButton(onClick = onOpenCalendar) {
-                        Text(text = stringResource(id = R.string.open_calendar))
-                    }
-                    TextButton(onClick = onOpenTagManager) {
-                        Text(text = stringResource(id = R.string.open_tags))
-                    }
-                    TextButton(onClick = onOpenSettings) {
-                        Text(text = stringResource(id = R.string.open_settings))
                     }
                 },
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onOpenEditor(null) }) {
-                Text(text = stringResource(id = R.string.home_new_entry_fab))
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(FabSpacing),
+            ) {
+                SmallFloatingActionButton(onClick = onOpenAgent) {
+                    Icon(
+                        imageVector = Icons.Default.Mic,
+                        contentDescription = null,
+                    )
+                }
+
+                FloatingActionButton(onClick = { onOpenEditor(null) }) {
+                    Text(text = stringResource(id = R.string.home_new_entry_fab))
+                }
             }
         },
     ) { innerPadding ->
@@ -111,7 +126,10 @@ fun HomeScreen(
                     onSelectAll = viewModel::onClearTagFilter,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = dimens.itemSpacing),
+                        .padding(
+                            horizontal = TagFiltersRowHorizontalPadding,
+                            top = TagFiltersRowTopPadding,
+                        ),
                 )
             }
 
@@ -204,7 +222,7 @@ private fun TagFiltersRow(
 
     LazyRow(
         modifier = modifier,
-        contentPadding = PaddingValues(horizontal = dimens.screenPadding),
+        contentPadding = PaddingValues(0.dp),
         horizontalArrangement = Arrangement.spacedBy(dimens.itemSpacing),
     ) {
         item {
@@ -427,3 +445,7 @@ private val HomeUiState.selectedDateFilterLabel: String?
             is HomeUiState.Error -> selectedDateFilterLabel
         }
     }
+
+private val TagFiltersRowHorizontalPadding = 16.dp
+private val TagFiltersRowTopPadding = 8.dp
+private val FabSpacing = 12.dp
