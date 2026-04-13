@@ -137,7 +137,9 @@
     <string name="agent_reply_date_filter">Showing entries for %1$s.</string>
     <string name="agent_reply_tags_list">Your tags: %1$s</string>
     <string name="agent_reply_tags_empty">You do not have any tags yet.</string>
-    <string name="agent_reply_unknown">Sorry, I did not understand that.</string>
+    <string name="agent_reply_unknown">Sorry, I did not understand that. Try: add todays diary I did my work today, or edit my todays dairy to this I completed tasks.</string>
     <string name="agent_reply_tag_not_found">No tag found with name "%1$s".</string>
     <string name="agent_reply_action_failed">Could not complete that action.</string>
+    <string name="agent_reply_help">Try commands like: add todays diary I did my work today, edit my todays dairy to this Finished tasks, edit 12 Jan to this Revised notes, delete diary from 12 Jan, delete last entry, search for workout, show tag work, show entries from today.</string>
+    <string name="agent_reply_small_talk">Ready when you are. Try saying: add todays diary ...</string>
 </resources>

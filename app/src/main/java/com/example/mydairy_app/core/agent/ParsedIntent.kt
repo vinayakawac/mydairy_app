@@ -8,6 +8,7 @@ sealed interface ParsedIntent {
 
     data class UpdateEntry(
         val targetTitle: String?,
+        val targetDateMillis: Long?,
         val body: String,
     ) : ParsedIntent
 
@@ -15,6 +16,10 @@ sealed interface ParsedIntent {
 
     data class DeleteTitled(
         val title: String,
+    ) : ParsedIntent
+
+    data class DeleteByDate(
+        val dateMillis: Long,
     ) : ParsedIntent
 
     data class Search(
@@ -30,6 +35,10 @@ sealed interface ParsedIntent {
     ) : ParsedIntent
 
     data object ListTags : ParsedIntent
+
+    data object Help : ParsedIntent
+
+    data object SmallTalk : ParsedIntent
 
     data class Unknown(
         val input: String,

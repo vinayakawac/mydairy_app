@@ -9,6 +9,7 @@ import com.example.mydairy_app.core.agent.ParsedIntent
 import com.example.mydairy_app.data.repository.EntryRepository
 import com.example.mydairy_app.data.repository.SaveEntryRequest
 import com.example.mydairy_app.data.repository.TagRepository
+import com.example.mydairy_app.domain.model.Entry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
 import java.time.ZoneId
@@ -240,10 +241,13 @@ class AgentViewModel @Inject constructor(
                     is ParsedIntent.UpdateEntry -> handleUpdateEntry(parsedIntent, pendingPhotos)
                     ParsedIntent.DeleteLast -> handleDeleteLast()
                     is ParsedIntent.DeleteTitled -> handleDeleteTitled(parsedIntent)
+                    is ParsedIntent.DeleteByDate -> handleDeleteByDate(parsedIntent)
                     is ParsedIntent.Search -> handleSearch(parsedIntent)
                     is ParsedIntent.ShowTag -> handleShowTag(parsedIntent)
                     is ParsedIntent.ShowDate -> handleShowDate(parsedIntent)
                     ParsedIntent.ListTags -> handleListTags()
+                    ParsedIntent.Help -> appendAgentMessage(R.string.agent_reply_help)
+                    ParsedIntent.SmallTalk -> appendAgentMessage(R.string.agent_reply_small_talk)
                     is ParsedIntent.Unknown -> appendAgentMessage(R.string.agent_reply_unknown)
                 }
             } catch (_: Throwable) {
@@ -288,9 +292,11 @@ class AgentViewModel @Inject constructor(
     }
 
     private suspend fun handleUpdateEntry(intent: ParsedIntent.UpdateEntry, pendingPhotos: List<String>): Unit {
-        val targetEntry = intent.targetTitle
-            ?.let { title -> entryRepository.getEntryByTitle(title) }
-            ?: entryRepository.getMostRecentEntry()
+        val targetEntry = when {
+            !intent.targetTitle.isNullOrBlank() -> entryRepository.getEntryByTitle(intent.targetTitle)
+            intent.targetDateMillis != null -> getMostRecentEntryForDay(intent.targetDateMillis)
+            else -> entryRepository.getMostRecentEntry()
+        }
 
         if (targetEntry == null) {
             appendAgentMessage(R.string.agent_reply_not_found)
@@ -325,6 +331,25 @@ class AgentViewModel @Inject constructor(
 
     private suspend fun handleDeleteLast(): Unit {
         val targetEntry = entryRepository.getMostRecentEntry()
+        if (targetEntry == null) {
+            appendAgentMessage(R.string.agent_reply_not_found)
+            return
+        }
+
+        val deleted = runCatching {
+            entryRepository.deleteEntryById(targetEntry.id)
+        }.isSuccess
+
+        if (!deleted) {
+            appendAgentMessage(R.string.agent_reply_action_failed)
+            return
+        }
+
+        appendAgentMessage(R.string.agent_reply_entry_deleted)
+    }
+
+    private suspend fun handleDeleteByDate(intent: ParsedIntent.DeleteByDate): Unit {
+        val targetEntry = getMostRecentEntryForDay(intent.dateMillis)
         if (targetEntry == null) {
             appendAgentMessage(R.string.agent_reply_not_found)
             return
@@ -436,6 +461,28 @@ class AgentViewModel @Inject constructor(
             messageRes = R.string.agent_reply_tags_list,
             textArgs = listOf(joinedTags),
         )
+    }
+
+    private suspend fun getMostRecentEntryForDay(dateMillis: Long): Entry? {
+        val localDate = Instant.ofEpochMilli(dateMillis)
+            .atZone(zoneId)
+            .toLocalDate()
+
+        val dayStart = localDate
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli()
+
+        val dayEnd = localDate
+            .plusDays(1)
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli() - 1L
+
+        return entryRepository
+            .getEntriesByDate(dayStart, dayEnd)
+            .first()
+            .firstOrNull()
     }
 
     private fun createUserMessage(text: String): AgentMessageUiModel {
