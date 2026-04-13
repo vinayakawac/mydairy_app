@@ -14,6 +14,7 @@ interface TagRepository {
     suspend fun updateTag(tag: Tag): Unit
     suspend fun deleteTag(tag: Tag): Unit
     suspend fun getTagsByIds(tagIds: Set<Long>): List<Tag>
+    suspend fun getTagByName(name: String): Tag?
 }
 
 @Singleton
@@ -45,6 +46,15 @@ class DefaultTagRepository @Inject constructor(
         }
 
         return tagDao.getTagsByIds(tagIds.toList()).map(TagEntity::toDomain)
+    }
+
+    override suspend fun getTagByName(name: String): Tag? {
+        val normalizedName = name.trim()
+        if (normalizedName.isEmpty()) {
+            return null
+        }
+
+        return tagDao.getTagByName(normalizedName)?.toDomain()
     }
 }
 

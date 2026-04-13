@@ -13,6 +13,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -87,11 +89,20 @@ class HomeViewModel @Inject constructor(
     private val initialDateFilterMillis: Long? = savedStateHandle
         .get<Long>(Screen.Home.DATE_FILTER_ARG)
         ?.takeIf { value -> value != Screen.Home.NO_DATE_FILTER }
+    private val initialSearchQuery: String = savedStateHandle
+        .get<String>(Screen.Home.SEARCH_QUERY_ARG)
+        ?.let(::decodeRouteParam)
+        .orEmpty()
+    private var pendingInitialTagName: String? = savedStateHandle
+        .get<String>(Screen.Home.TAG_NAME_ARG)
+        ?.let(::decodeRouteParam)
+        ?.trim()
+        ?.takeIf(String::isNotEmpty)
 
     private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(
         HomeUiState.Loading(
-            searchQuery = EMPTY_SEARCH_QUERY,
-            isSearchExpanded = false,
+            searchQuery = initialSearchQuery,
+            isSearchExpanded = initialSearchQuery.isNotBlank(),
             availableTags = emptyList(),
             selectedTagId = null,
             selectedDateFilterLabel = initialDateFilterMillis?.let(::formatDay),
@@ -99,8 +110,8 @@ class HomeViewModel @Inject constructor(
     )
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    private val searchQuery: MutableStateFlow<String> = MutableStateFlow(EMPTY_SEARCH_QUERY)
-    private val isSearchExpanded: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val searchQuery: MutableStateFlow<String> = MutableStateFlow(initialSearchQuery)
+    private val isSearchExpanded: MutableStateFlow<Boolean> = MutableStateFlow(initialSearchQuery.isNotBlank())
     private val selectedTagId: MutableStateFlow<Long?> = MutableStateFlow(null)
     private val selectedDateFilterMillis: MutableStateFlow<Long?> = MutableStateFlow(initialDateFilterMillis)
 
@@ -255,6 +266,19 @@ class HomeViewModel @Inject constructor(
                     )
                 }
                 .collectLatest { tags ->
+                    val initialTagName = pendingInitialTagName
+                    if (initialTagName != null && selectedTagId.value == null) {
+                        val matchingTagId = tags
+                            .firstOrNull { tag ->
+                                tag.name.equals(initialTagName, ignoreCase = true)
+                            }
+                            ?.id
+                        pendingInitialTagName = null
+                        if (matchingTagId != null) {
+                            selectedTagId.value = matchingTagId
+                        }
+                    }
+
                     val activeTagId = selectedTagId.value
                     val activeTagStillExists = activeTagId != null && tags.any { tag -> tag.id == activeTagId }
                     if (!activeTagStillExists && activeTagId != null) {
@@ -431,3 +455,7 @@ private val HomeUiState.availableTags: List<HomeTagFilterUiModel>
             is HomeUiState.Error -> availableTags
         }
     }
+
+private fun decodeRouteParam(value: String): String {
+    return URLDecoder.decode(value, StandardCharsets.UTF_8.toString())
+}

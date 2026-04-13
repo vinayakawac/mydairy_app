@@ -17,6 +17,9 @@ interface TagDao {
     @Query("SELECT * FROM tags WHERE id IN (:tagIds)")
     suspend fun getTagsByIds(tagIds: List<Long>): List<TagEntity>
 
+    @Query("SELECT * FROM tags WHERE LOWER(name) = LOWER(:name) LIMIT 1")
+    suspend fun getTagByName(name: String): TagEntity?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTag(tag: TagEntity): Long
 

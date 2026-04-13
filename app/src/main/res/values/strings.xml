@@ -122,4 +122,22 @@
     <string name="assistant_cancel_voice_capture">Cancel voice input</string>
     <string name="assistant_send_message">Send message</string>
     <string name="assistant_listening">Listening</string>
+    <string name="assistant_add_gallery">Attach from Gallery</string>
+    <string name="assistant_add_camera">Attach from Camera</string>
+    <string name="assistant_remove_attachment">Remove attached image</string>
+    <string name="assistant_attachment_label">Image attached</string>
+    <string name="assistant_voice_capture_failed">Could not capture voice input.</string>
+    <string name="agent_mic_permission_denied">Microphone permission is required for voice input.</string>
+    <string name="agent_reply_entry_added">Entry created.</string>
+    <string name="agent_reply_entry_updated">Entry updated.</string>
+    <string name="agent_reply_entry_deleted">Entry deleted.</string>
+    <string name="agent_reply_not_found">No matching entry found.</string>
+    <string name="agent_reply_search_done">Showing results for "%1$s".</string>
+    <string name="agent_reply_tag_filter">Filtered by tag "%1$s".</string>
+    <string name="agent_reply_date_filter">Showing entries for %1$s.</string>
+    <string name="agent_reply_tags_list">Your tags: %1$s</string>
+    <string name="agent_reply_tags_empty">You do not have any tags yet.</string>
+    <string name="agent_reply_unknown">Sorry, I did not understand that.</string>
+    <string name="agent_reply_tag_not_found">No tag found with name "%1$s".</string>
+    <string name="agent_reply_action_failed">Could not complete that action.</string>
 </resources>

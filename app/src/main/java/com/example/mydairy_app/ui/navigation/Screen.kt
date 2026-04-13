@@ -1,13 +1,45 @@
 package com.example.mydairy_app.ui.navigation
 
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 sealed class Screen(val route: String) {
-    data object Home : Screen("home?dateFilter={dateFilter}") {
+    data object Home : Screen("home?dateFilter={dateFilter}&searchQuery={searchQuery}&tagName={tagName}") {
         const val BASE_ROUTE: String = "home"
         const val DATE_FILTER_ARG: String = "dateFilter"
+        const val SEARCH_QUERY_ARG: String = "searchQuery"
+        const val TAG_NAME_ARG: String = "tagName"
         const val NO_DATE_FILTER: Long = -1L
+        const val EMPTY_QUERY: String = ""
 
-        fun createRoute(dateFilterMillis: Long? = null): String {
-            return dateFilterMillis?.let { "$BASE_ROUTE?$DATE_FILTER_ARG=$it" } ?: BASE_ROUTE
+        fun createRoute(
+            dateFilterMillis: Long? = null,
+            searchQuery: String? = null,
+            tagName: String? = null,
+        ): String {
+            val params = mutableListOf<String>()
+            dateFilterMillis?.let { millis ->
+                params += "$DATE_FILTER_ARG=$millis"
+            }
+            searchQuery
+                ?.trim()
+                ?.takeIf(String::isNotEmpty)
+                ?.let { query ->
+                    params += "$SEARCH_QUERY_ARG=${encodeRouteParam(query)}"
+                }
+            tagName
+                ?.trim()
+                ?.takeIf(String::isNotEmpty)
+                ?.let { value ->
+                    params += "$TAG_NAME_ARG=${encodeRouteParam(value)}"
+                }
+
+            return if (params.isEmpty()) {
+                BASE_ROUTE
+            } else {
+                val query = params.joinToString(separator = "&")
+                "$BASE_ROUTE?$query"
+            }
         }
     }
     data object Calendar : Screen("calendar")
@@ -34,4 +66,8 @@ sealed class Screen(val route: String) {
     companion object {
         const val SAMPLE_ENTRY_ID: Long = 1L
     }
+}
+
+private fun encodeRouteParam(value: String): String {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8.toString())
 }

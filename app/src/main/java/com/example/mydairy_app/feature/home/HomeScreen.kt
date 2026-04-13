@@ -12,7 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -90,7 +90,7 @@ fun HomeScreen(
             ) {
                 SmallFloatingActionButton(onClick = onOpenAgent) {
                     Icon(
-                        imageVector = Icons.Default.Android,
+                        imageVector = Icons.Default.Mic,
                         contentDescription = null,
                     )
                 }

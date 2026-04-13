@@ -35,6 +35,8 @@ interface EntryRepository {
     fun getEntriesByDate(dateMillisStart: Long, dateMillisEnd: Long): Flow<List<Entry>>
     fun searchEntries(query: String): Flow<List<Entry>>
     suspend fun getEntryById(id: Long): Entry?
+    suspend fun getMostRecentEntry(): Entry?
+    suspend fun getEntryByTitle(title: String): Entry?
     suspend fun createCameraOutputUri(entryId: Long?): String
     suspend fun saveFromEditor(request: SaveEntryRequest): Long
     suspend fun insertEntry(entry: Entry, tagIds: Set<Long>): Long
@@ -76,6 +78,19 @@ class DefaultEntryRepository @Inject constructor(
 
     override suspend fun getEntryById(id: Long): Entry? {
         return entryDao.getEntryById(id)?.toDomain()
+    }
+
+    override suspend fun getMostRecentEntry(): Entry? {
+        return entryDao.getMostRecentEntry()?.toDomain()
+    }
+
+    override suspend fun getEntryByTitle(title: String): Entry? {
+        val normalizedTitle = title.trim()
+        if (normalizedTitle.isEmpty()) {
+            return null
+        }
+
+        return entryDao.getEntryByTitle(normalizedTitle)?.toDomain()
     }
 
     override suspend fun createCameraOutputUri(entryId: Long?): String {

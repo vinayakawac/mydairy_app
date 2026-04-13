@@ -28,6 +28,16 @@ interface EntryDao {
     suspend fun getEntryById(id: Long): EntryWithTags?
 
     @Transaction
+    @Query("SELECT * FROM entries ORDER BY createdAt DESC LIMIT 1")
+    suspend fun getMostRecentEntry(): EntryWithTags?
+
+    @Transaction
+    @Query(
+        "SELECT * FROM entries WHERE title IS NOT NULL AND LOWER(title) = LOWER(:title) ORDER BY updatedAt DESC LIMIT 1",
+    )
+    suspend fun getEntryByTitle(title: String): EntryWithTags?
+
+    @Transaction
     @Query(
         """
         SELECT entries.*

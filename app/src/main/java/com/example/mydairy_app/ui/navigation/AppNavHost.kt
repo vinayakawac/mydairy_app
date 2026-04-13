@@ -29,6 +29,14 @@ fun AppNavHost(): Unit {
                     type = NavType.LongType
                     defaultValue = Screen.Home.NO_DATE_FILTER
                 },
+                navArgument(Screen.Home.SEARCH_QUERY_ARG) {
+                    type = NavType.StringType
+                    defaultValue = Screen.Home.EMPTY_QUERY
+                },
+                navArgument(Screen.Home.TAG_NAME_ARG) {
+                    type = NavType.StringType
+                    defaultValue = Screen.Home.EMPTY_QUERY
+                },
             ),
         ) {
             HomeScreen(
@@ -117,6 +125,20 @@ fun AppNavHost(): Unit {
         composable(route = Screen.Agent.route) {
             AgentScreen(
                 onBack = { navController.popBackStack() },
+                onNavigateHome = { searchQuery, tagName, dateFilterMillis ->
+                    navController.navigate(
+                        Screen.Home.createRoute(
+                            dateFilterMillis = dateFilterMillis,
+                            searchQuery = searchQuery,
+                            tagName = tagName,
+                        ),
+                    ) {
+                        popUpTo(Screen.Home.BASE_ROUTE) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }
